@@ -1,22 +1,25 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AqarMatch API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: listings
+    description: Property listing operations
+  - name: stats
+    description: Statistics and aggregates
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +27,134 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /listings:
+    get:
+      operationId: getListings
+      tags: [listings]
+      summary: Browse property listings
+      parameters:
+        - in: query
+          name: deal_type
+          schema:
+            type: string
+        - in: query
+          name: wilaya
+          schema:
+            type: string
+        - in: query
+          name: municipality
+          schema:
+            type: string
+        - in: query
+          name: max_price
+          schema:
+            type: number
+      responses:
+        "200":
+          description: List of listings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Listing"
+    post:
+      operationId: createListing
+      tags: [listings]
+      summary: Create a new property listing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListingInput"
+      responses:
+        "201":
+          description: Listing created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "400":
+          description: Validation error
+
+  /listings/stats:
+    get:
+      operationId: getListingStats
+      tags: [stats]
+      summary: Get listing statistics
+      responses:
+        "200":
+          description: Statistics summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListingStats"
+
+  /listings/{id}:
+    get:
+      operationId: getListing
+      tags: [listings]
+      summary: Get a single listing
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Listing detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Listing"
+        "404":
+          description: Not found
+
+  /listings/{id}/match:
+    post:
+      operationId: matchListing
+      tags: [listings]
+      summary: Check if buyer budget matches listing
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MatchRequest"
+      responses:
+        "200":
+          description: Match result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MatchResult"
+        "404":
+          description: Listing not found
+
+  /wilayat:
+    get:
+      operationId: getWilayat
+      tags: [listings]
+      summary: Get list of Algerian provinces
+      responses:
+        "200":
+          description: List of wilayas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Wilaya"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +165,139 @@ components:
       required:
         - status
 
+    Listing:
+      type: object
+      required:
+        - id
+        - deal_type
+        - wilaya
+        - municipality
+        - neighborhoods
+        - asking_price
+        - user_phone
+        - created_at
+      properties:
+        id:
+          type: integer
+        deal_type:
+          type: string
+          enum: [بيع, إيجار]
+        wilaya:
+          type: string
+        municipality:
+          type: string
+        neighborhoods:
+          type: array
+          items:
+            type: string
+        asking_price:
+          type: number
+        user_phone:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    ListingInput:
+      type: object
+      required:
+        - deal_type
+        - wilaya
+        - municipality
+        - neighborhoods
+        - asking_price
+        - floor_price
+        - user_phone
+      properties:
+        deal_type:
+          type: string
+          enum: [بيع, إيجار]
+        wilaya:
+          type: string
+        municipality:
+          type: string
+        neighborhoods:
+          type: array
+          items:
+            type: string
+        asking_price:
+          type: number
+        floor_price:
+          type: number
+        user_phone:
+          type: string
+
+    MatchRequest:
+      type: object
+      required:
+        - budget
+        - buyer_phone
+      properties:
+        budget:
+          type: number
+        buyer_phone:
+          type: string
+
+    MatchResult:
+      type: object
+      required:
+        - matched
+        - listing_id
+      properties:
+        matched:
+          type: boolean
+        listing_id:
+          type: integer
+        seller_phone:
+          type: ["string", "null"]
+        message:
+          type: string
+
+    ListingStats:
+      type: object
+      required:
+        - total
+        - for_sale
+        - for_rent
+        - by_wilaya
+        - recent_listings
+      properties:
+        total:
+          type: integer
+        for_sale:
+          type: integer
+        for_rent:
+          type: integer
+        by_wilaya:
+          type: array
+          items:
+            $ref: "#/components/schemas/WilayaCount"
+        recent_listings:
+          type: array
+          items:
+            $ref: "#/components/schemas/Listing"
+
+    WilayaCount:
+      type: object
+      required:
+        - wilaya
+        - count
+      properties:
+        wilaya:
+          type: string
+        count:
+          type: integer
+
+    Wilaya:
+      type: object
+      required:
+        - code
+        - name
+        - name_ar
+      properties:
+        code:
+          type: integer
+        name:
+          type: string
+        name_ar:
+          type: string
