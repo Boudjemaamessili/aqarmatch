@@ -117,6 +117,39 @@ export const MatchListingResponse = zod.object({
 
 
 /**
+ * @summary Get all listings and match attempts for a seller by phone number
+ */
+export const GetSellerInquiriesParams = zod.object({
+  "phone": zod.coerce.string()
+})
+
+export const GetSellerInquiriesResponse = zod.object({
+  "phone": zod.string(),
+  "total_listings": zod.number(),
+  "total_inquiries": zod.number(),
+  "total_matched": zod.number(),
+  "listings": zod.array(zod.object({
+  "id": zod.number(),
+  "deal_type": zod.string(),
+  "wilaya": zod.string(),
+  "municipality": zod.string(),
+  "neighborhoods": zod.array(zod.string()),
+  "asking_price": zod.number(),
+  "created_at": zod.coerce.date(),
+  "matches": zod.array(zod.object({
+  "id": zod.number(),
+  "buyer_phone": zod.string(),
+  "budget": zod.number(),
+  "matched": zod.boolean(),
+  "created_at": zod.coerce.date()
+})),
+  "total_inquiries": zod.number(),
+  "matched_count": zod.number()
+}))
+})
+
+
+/**
  * @summary Get list of Algerian provinces
  */
 export const GetWilayatResponseItem = zod.object({

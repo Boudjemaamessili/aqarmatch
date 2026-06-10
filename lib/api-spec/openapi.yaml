@@ -140,6 +140,27 @@ paths:
         "404":
           description: Listing not found
 
+  /sellers/{phone}/inquiries:
+    get:
+      operationId: getSellerInquiries
+      tags: [listings]
+      summary: Get all listings and match attempts for a seller by phone number
+      parameters:
+        - in: path
+          name: phone
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Seller inquiry summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellerInquirySummary"
+        "404":
+          description: No listings found for this phone
+
   /wilayat:
     get:
       operationId: getWilayat
@@ -301,3 +322,86 @@ components:
           type: string
         name_ar:
           type: string
+
+    MatchAttempt:
+      type: object
+      required:
+        - id
+        - buyer_phone
+        - budget
+        - matched
+        - created_at
+      properties:
+        id:
+          type: integer
+        buyer_phone:
+          type: string
+        budget:
+          type: number
+        matched:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    ListingWithInquiries:
+      type: object
+      required:
+        - id
+        - deal_type
+        - wilaya
+        - municipality
+        - neighborhoods
+        - asking_price
+        - created_at
+        - matches
+        - total_inquiries
+        - matched_count
+      properties:
+        id:
+          type: integer
+        deal_type:
+          type: string
+        wilaya:
+          type: string
+        municipality:
+          type: string
+        neighborhoods:
+          type: array
+          items:
+            type: string
+        asking_price:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        matches:
+          type: array
+          items:
+            $ref: "#/components/schemas/MatchAttempt"
+        total_inquiries:
+          type: integer
+        matched_count:
+          type: integer
+
+    SellerInquirySummary:
+      type: object
+      required:
+        - phone
+        - total_listings
+        - total_inquiries
+        - total_matched
+        - listings
+      properties:
+        phone:
+          type: string
+        total_listings:
+          type: integer
+        total_inquiries:
+          type: integer
+        total_matched:
+          type: integer
+        listings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ListingWithInquiries"

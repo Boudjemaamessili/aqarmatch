@@ -27,6 +27,7 @@ import type {
   ListingStats,
   MatchRequest,
   MatchResult,
+  SellerInquirySummary,
   Wilaya
 } from './api.schemas';
 
@@ -499,6 +500,83 @@ export const useMatchListing = <TError = ErrorType<void>,
       > => {
       return useMutation(getMatchListingMutationOptions(options));
     }
+
+export const getGetSellerInquiriesUrl = (phone: string,) => {
+
+
+
+
+  return `/api/sellers/${phone}/inquiries`
+}
+
+/**
+ * @summary Get all listings and match attempts for a seller by phone number
+ */
+export const getSellerInquiries = async (phone: string, options?: RequestInit): Promise<SellerInquirySummary> => {
+
+  return customFetch<SellerInquirySummary>(getGetSellerInquiriesUrl(phone),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetSellerInquiriesQueryKey = (phone: string,) => {
+    return [
+    `/api/sellers/${phone}/inquiries`
+    ] as const;
+    }
+
+
+export const getGetSellerInquiriesQueryOptions = <TData = Awaited<ReturnType<typeof getSellerInquiries>>, TError = ErrorType<void>>(phone: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSellerInquiries>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetSellerInquiriesQueryKey(phone);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getSellerInquiries>>> = ({ signal }) => getSellerInquiries(phone, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: !!(phone), ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getSellerInquiries>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetSellerInquiriesQueryResult = NonNullable<Awaited<ReturnType<typeof getSellerInquiries>>>
+export type GetSellerInquiriesQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get all listings and match attempts for a seller by phone number
+ */
+
+export function useGetSellerInquiries<TData = Awaited<ReturnType<typeof getSellerInquiries>>, TError = ErrorType<void>>(
+ phone: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getSellerInquiries>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetSellerInquiriesQueryOptions(phone,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetWilayatUrl = () => {
 

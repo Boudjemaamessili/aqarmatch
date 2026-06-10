@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { Home, Search, PlusCircle, Building2 } from "lucide-react";
+import { Home, Search, PlusCircle, Building2, Inbox } from "lucide-react";
 
 export function Layout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -9,6 +9,7 @@ export function Layout({ children }: { children: ReactNode }) {
     { href: "/", label: "الرئيسية", icon: Home },
     { href: "/listings", label: "تصفح العقارات", icon: Search },
     { href: "/listings/new", label: "أضف عقارك", icon: PlusCircle },
+    { href: "/inquiries", label: "استفساراتي", icon: Inbox },
   ];
 
   return (

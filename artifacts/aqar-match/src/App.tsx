@@ -9,6 +9,7 @@ import BrowseListingsPage from "@/pages/listings/index";
 import NewListingPage from "@/pages/listings/new";
 import ListingDetailPage from "@/pages/listings/[id]";
 import MatchSuccessPage from "@/pages/match";
+import InquiriesPage from "@/pages/inquiries";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -21,6 +22,7 @@ function Router() {
       <Route path="/listings/new" component={NewListingPage} />
       <Route path="/listings/:id" component={ListingDetailPage} />
       <Route path="/match" component={MatchSuccessPage} />
+      <Route path="/inquiries" component={InquiriesPage} />
       <Route component={NotFound} />
     </Switch>
   );

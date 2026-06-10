@@ -78,6 +78,35 @@ export interface Wilaya {
   name_ar: string;
 }
 
+export interface MatchAttempt {
+  id: number;
+  buyer_phone: string;
+  budget: number;
+  matched: boolean;
+  created_at: string;
+}
+
+export interface ListingWithInquiries {
+  id: number;
+  deal_type: string;
+  wilaya: string;
+  municipality: string;
+  neighborhoods: string[];
+  asking_price: number;
+  created_at: string;
+  matches: MatchAttempt[];
+  total_inquiries: number;
+  matched_count: number;
+}
+
+export interface SellerInquirySummary {
+  phone: string;
+  total_listings: number;
+  total_inquiries: number;
+  total_matched: number;
+  listings: ListingWithInquiries[];
+}
+
 export type GetListingsParams = {
 deal_type?: string;
 wilaya?: string;
