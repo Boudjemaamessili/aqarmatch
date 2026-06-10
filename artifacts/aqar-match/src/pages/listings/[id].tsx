@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MapPin, Tag, Calendar, ShieldCheck, HelpCircle } from "lucide-react";
+import { MapPin, Tag, Calendar, ShieldCheck, HelpCircle, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 
 const matchSchema = z.object({
@@ -107,6 +107,15 @@ export default function ListingDetailPage() {
         
         {/* Listing Details */}
         <div className="lg:col-span-7 space-y-8">
+          {!listing.is_active && (
+            <div className="bg-destructive/10 text-destructive border border-destructive/20 p-4 rounded-xl flex items-start gap-3">
+              <AlertTriangle className="w-6 h-6 shrink-0 mt-0.5" />
+              <div>
+                <h3 className="font-bold text-lg mb-1">هذا العقار منتهي الصلاحية</h3>
+                <p className="text-sm opacity-90">لا يمكن إجراء فحص التطابق لهذا العقار حالياً.</p>
+              </div>
+            </div>
+          )}
           <div className="aspect-[16/10] bg-muted rounded-2xl overflow-hidden relative border border-border">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary to-transparent" />
             <div className="absolute inset-0 flex items-center justify-center">
@@ -204,11 +213,11 @@ export default function ListingDetailPage() {
                 <Button 
                   type="submit" 
                   size="lg" 
-                  className="w-full h-14 text-lg font-black bg-accent hover:bg-accent/90 mt-4" 
-                  disabled={matchMutation.isPending}
+                  className="w-full h-14 text-lg font-black bg-accent hover:bg-accent/90 mt-4 disabled:opacity-50" 
+                  disabled={matchMutation.isPending || !listing.is_active}
                   data-testid="button-match-submit"
                 >
-                  {matchMutation.isPending ? "جاري الفحص..." : "افحص التطابق الآن"}
+                  {matchMutation.isPending ? "جاري الفحص..." : !listing.is_active ? "العقار منتهي الصلاحية" : "افحص التطابق الآن"}
                 </Button>
               </form>
             </Form>

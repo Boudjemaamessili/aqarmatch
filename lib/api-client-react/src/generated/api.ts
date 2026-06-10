@@ -27,6 +27,7 @@ import type {
   ListingStats,
   MatchRequest,
   MatchResult,
+  RenewRequest,
   SellerInquirySummary,
   Wilaya
 } from './api.schemas';
@@ -499,6 +500,78 @@ export const useMatchListing = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getMatchListingMutationOptions(options));
+    }
+
+export const getRenewListingUrl = (id: number,) => {
+
+
+
+
+  return `/api/listings/${id}/renew`
+}
+
+/**
+ * @summary Renew a listing for another 30 days
+ */
+export const renewListing = async (id: number,
+    renewRequest: RenewRequest, options?: RequestInit): Promise<Listing> => {
+
+  return customFetch<Listing>(getRenewListingUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      renewRequest,)
+  }
+);}
+
+
+
+
+export const getRenewListingMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renewListing>>, TError,{id: number;data: BodyType<RenewRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof renewListing>>, TError,{id: number;data: BodyType<RenewRequest>}, TContext> => {
+
+const mutationKey = ['renewListing'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof renewListing>>, {id: number;data: BodyType<RenewRequest>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  renewListing(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RenewListingMutationResult = NonNullable<Awaited<ReturnType<typeof renewListing>>>
+    export type RenewListingMutationBody = BodyType<RenewRequest>
+    export type RenewListingMutationError = ErrorType<void>
+
+    /**
+ * @summary Renew a listing for another 30 days
+ */
+export const useRenewListing = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof renewListing>>, TError,{id: number;data: BodyType<RenewRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof renewListing>>,
+        TError,
+        {id: number;data: BodyType<RenewRequest>},
+        TContext
+      > => {
+      return useMutation(getRenewListingMutationOptions(options));
     }
 
 export const getGetSellerInquiriesUrl = (phone: string,) => {

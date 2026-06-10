@@ -34,7 +34,10 @@ export const GetListingsResponseItem = zod.object({
   "neighborhoods": zod.array(zod.string()),
   "asking_price": zod.number(),
   "user_phone": zod.string(),
-  "created_at": zod.coerce.date()
+  "created_at": zod.coerce.date(),
+  "expires_at": zod.coerce.date(),
+  "is_active": zod.boolean(),
+  "days_remaining": zod.number()
 })
 export const GetListingsResponse = zod.array(GetListingsResponseItem)
 
@@ -72,7 +75,10 @@ export const GetListingStatsResponse = zod.object({
   "neighborhoods": zod.array(zod.string()),
   "asking_price": zod.number(),
   "user_phone": zod.string(),
-  "created_at": zod.coerce.date()
+  "created_at": zod.coerce.date(),
+  "expires_at": zod.coerce.date(),
+  "is_active": zod.boolean(),
+  "days_remaining": zod.number()
 }))
 })
 
@@ -92,7 +98,10 @@ export const GetListingResponse = zod.object({
   "neighborhoods": zod.array(zod.string()),
   "asking_price": zod.number(),
   "user_phone": zod.string(),
-  "created_at": zod.coerce.date()
+  "created_at": zod.coerce.date(),
+  "expires_at": zod.coerce.date(),
+  "is_active": zod.boolean(),
+  "days_remaining": zod.number()
 })
 
 
@@ -117,6 +126,32 @@ export const MatchListingResponse = zod.object({
 
 
 /**
+ * @summary Renew a listing for another 30 days
+ */
+export const RenewListingParams = zod.object({
+  "id": zod.coerce.number()
+})
+
+export const RenewListingBody = zod.object({
+  "seller_phone": zod.string()
+})
+
+export const RenewListingResponse = zod.object({
+  "id": zod.number(),
+  "deal_type": zod.enum(['بيع', 'إيجار']),
+  "wilaya": zod.string(),
+  "municipality": zod.string(),
+  "neighborhoods": zod.array(zod.string()),
+  "asking_price": zod.number(),
+  "user_phone": zod.string(),
+  "created_at": zod.coerce.date(),
+  "expires_at": zod.coerce.date(),
+  "is_active": zod.boolean(),
+  "days_remaining": zod.number()
+})
+
+
+/**
  * @summary Get all listings and match attempts for a seller by phone number
  */
 export const GetSellerInquiriesParams = zod.object({
@@ -136,6 +171,9 @@ export const GetSellerInquiriesResponse = zod.object({
   "neighborhoods": zod.array(zod.string()),
   "asking_price": zod.number(),
   "created_at": zod.coerce.date(),
+  "expires_at": zod.coerce.date(),
+  "is_active": zod.boolean(),
+  "days_remaining": zod.number(),
   "matches": zod.array(zod.object({
   "id": zod.number(),
   "buyer_phone": zod.string(),

@@ -1,6 +1,8 @@
-import { pgTable, text, serial, timestamp, numeric, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, timestamp, numeric, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
+
+export const LISTING_EXPIRY_DAYS = 30;
 
 export const listingsTable = pgTable("listings", {
   id: serial("id").primaryKey(),
@@ -11,12 +13,16 @@ export const listingsTable = pgTable("listings", {
   asking_price: numeric("asking_price", { precision: 15, scale: 2 }).notNull(),
   floor_price: numeric("floor_price", { precision: 15, scale: 2 }).notNull(),
   user_phone: text("user_phone").notNull(),
+  is_active: boolean("is_active").notNull().default(true),
+  expires_at: timestamp("expires_at", { withTimezone: true }).notNull(),
   created_at: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
 export const insertListingSchema = createInsertSchema(listingsTable).omit({
   id: true,
   created_at: true,
+  is_active: true,
+  expires_at: true,
 });
 
 export type InsertListing = z.infer<typeof insertListingSchema>;

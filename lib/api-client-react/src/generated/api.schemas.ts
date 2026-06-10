@@ -26,6 +26,9 @@ export interface Listing {
   asking_price: number;
   user_phone: string;
   created_at: string;
+  expires_at: string;
+  is_active: boolean;
+  days_remaining: number;
 }
 
 export type ListingInputDealType = typeof ListingInputDealType[keyof typeof ListingInputDealType];
@@ -44,6 +47,10 @@ export interface ListingInput {
   asking_price: number;
   floor_price: number;
   user_phone: string;
+}
+
+export interface RenewRequest {
+  seller_phone: string;
 }
 
 export interface MatchRequest {
@@ -94,6 +101,9 @@ export interface ListingWithInquiries {
   neighborhoods: string[];
   asking_price: number;
   created_at: string;
+  expires_at: string;
+  is_active: boolean;
+  days_remaining: number;
   matches: MatchAttempt[];
   total_inquiries: number;
   matched_count: number;

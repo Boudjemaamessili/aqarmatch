@@ -17,6 +17,7 @@ export * from './listingWithInquiries';
 export * from './matchAttempt';
 export * from './matchRequest';
 export * from './matchResult';
+export * from './renewRequest';
 export * from './sellerInquirySummary';
 export * from './wilaya';
 export * from './wilayaCount';

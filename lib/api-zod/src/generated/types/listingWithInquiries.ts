@@ -15,6 +15,9 @@ export interface ListingWithInquiries {
   neighborhoods: string[];
   asking_price: number;
   created_at: Date;
+  expires_at: Date;
+  is_active: boolean;
+  days_remaining: number;
   matches: MatchAttempt[];
   total_inquiries: number;
   matched_count: number;

@@ -4,6 +4,12 @@ import { eq, inArray } from "drizzle-orm";
 
 const router = Router();
 
+function computeDaysRemaining(expiresAt: Date): number {
+  const now = new Date();
+  const diff = expiresAt.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
 router.get("/sellers/:phone/inquiries", async (req: Request, res: Response) => {
   const phone = String(req.params.phone);
 
@@ -34,8 +40,12 @@ router.get("/sellers/:phone/inquiries", async (req: Request, res: Response) => {
     matchesByListing[m.listing_id].push(m);
   }
 
+  const now = new Date();
+
   const listingsWithInquiries = listings.map(l => {
     const matches = matchesByListing[l.id] ?? [];
+    const expiresAt = new Date(l.expires_at);
+    const isActive = l.is_active && expiresAt > now;
     return {
       id: l.id,
       deal_type: l.deal_type,
@@ -44,6 +54,9 @@ router.get("/sellers/:phone/inquiries", async (req: Request, res: Response) => {
       neighborhoods: l.neighborhoods ?? [],
       asking_price: parseFloat(l.asking_price as unknown as string),
       created_at: l.created_at.toISOString(),
+      expires_at: expiresAt.toISOString(),
+      is_active: isActive,
+      days_remaining: computeDaysRemaining(expiresAt),
       matches: matches.map(m => ({
         id: m.id,
         buyer_phone: m.buyer_phone,

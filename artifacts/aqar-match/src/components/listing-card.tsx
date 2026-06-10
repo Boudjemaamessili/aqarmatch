@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { Listing } from "@workspace/api-client-react/src/generated/api.schemas";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Tag } from "lucide-react";
+import { MapPin, Tag, Clock, AlertTriangle } from "lucide-react";
 
 interface ListingCardProps {
   listing: Listing;
@@ -12,7 +12,7 @@ export function ListingCard({ listing }: ListingCardProps) {
   const formattedPrice = new Intl.NumberFormat("ar-DZ").format(listing.asking_price);
 
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md hover:border-primary/30 flex flex-col group">
+    <Card className={`overflow-hidden transition-all flex flex-col group ${listing.is_active ? 'hover:shadow-md hover:border-primary/30' : 'opacity-60'}`}>
       <CardHeader className="p-0">
         <div className="aspect-[4/3] bg-muted relative overflow-hidden">
           {/* Placeholder for an image - using CSS pattern for texture */}
@@ -54,19 +54,37 @@ export function ListingCard({ listing }: ListingCardProps) {
         )}
       </CardContent>
 
-      <CardFooter className="p-5 pt-0 flex items-center justify-between mt-auto">
-        <div className="flex flex-col">
-          <span className="text-xs text-muted-foreground mb-0.5 flex items-center gap-1">
-            <Tag className="w-3 h-3" /> السعر المطلوب
-          </span>
-          <span className="font-black text-primary text-lg">
-            {formattedPrice} دج
-          </span>
+      <CardFooter className="p-5 pt-0 flex flex-col gap-3 mt-auto">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col">
+            <span className="text-xs text-muted-foreground mb-0.5 flex items-center gap-1">
+              <Tag className="w-3 h-3" /> السعر المطلوب
+            </span>
+            <span className="font-black text-primary text-lg">
+              {formattedPrice} دج
+            </span>
+          </div>
+          
+          <Link href={`/listings/${listing.id}`} className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-bold transition-colors" data-testid={`link-listing-${listing.id}`}>
+            التفاصيل
+          </Link>
         </div>
-        
-        <Link href={`/listings/${listing.id}`} className="bg-secondary text-secondary-foreground hover:bg-secondary/80 px-4 py-2 rounded-md text-sm font-bold transition-colors" data-testid={`link-listing-${listing.id}`}>
-          التفاصيل
-        </Link>
+
+        <div className="w-full flex justify-start">
+          {!listing.is_active ? (
+            <Badge variant="destructive" className="flex gap-1 items-center font-bold text-xs py-1">
+              <AlertTriangle className="w-3 h-3" /> منتهي الصلاحية
+            </Badge>
+          ) : listing.days_remaining !== undefined && listing.days_remaining <= 7 ? (
+            <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-50 dark:bg-amber-950/30 flex gap-1 items-center font-bold text-xs py-1">
+              <Clock className="w-3 h-3" /> ينتهي خلال {listing.days_remaining} أيام ⚠
+            </Badge>
+          ) : listing.days_remaining !== undefined ? (
+            <Badge variant="secondary" className="text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 flex gap-1 items-center font-bold text-xs py-1">
+              <Clock className="w-3 h-3" /> ينتهي خلال {listing.days_remaining} أيام
+            </Badge>
+          ) : null}
+        </div>
       </CardFooter>
     </Card>
   );

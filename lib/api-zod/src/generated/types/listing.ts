@@ -16,4 +16,7 @@ export interface Listing {
   asking_price: number;
   user_phone: string;
   created_at: Date;
+  expires_at: Date;
+  is_active: boolean;
+  days_remaining: number;
 }

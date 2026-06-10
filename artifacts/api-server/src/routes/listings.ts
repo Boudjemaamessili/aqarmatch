@@ -1,7 +1,14 @@
 import { Router, Request, Response } from "express";
-import { db, listingsTable, matchesTable } from "@workspace/db";
-import { eq, desc, sql, and, lte } from "drizzle-orm";
-import { CreateListingBody, GetListingsQueryParams, MatchListingBody, MatchListingParams, GetListingParams } from "@workspace/api-zod";
+import { db, listingsTable, matchesTable, LISTING_EXPIRY_DAYS } from "@workspace/db";
+import { eq, desc, and, lte, gt, isNull, or } from "drizzle-orm";
+import {
+  CreateListingBody,
+  GetListingsQueryParams,
+  MatchListingBody,
+  MatchListingParams,
+  GetListingParams,
+  RenewListingBody,
+} from "@workspace/api-zod";
 
 const router = Router();
 
@@ -66,7 +73,19 @@ const WILAYAT = [
   { code: 58, name: "El Meniaa", name_ar: "المنيعة" },
 ];
 
+function computeDaysRemaining(expiresAt: Date): number {
+  const now = new Date();
+  const diff = expiresAt.getTime() - now.getTime();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+}
+
+function computeIsActive(row: typeof listingsTable.$inferSelect): boolean {
+  return row.is_active && new Date(row.expires_at) > new Date();
+}
+
 function formatListing(row: typeof listingsTable.$inferSelect) {
+  const expiresAt = new Date(row.expires_at);
+  const isActive = computeIsActive(row);
   return {
     id: row.id,
     deal_type: row.deal_type,
@@ -76,6 +95,9 @@ function formatListing(row: typeof listingsTable.$inferSelect) {
     asking_price: parseFloat(row.asking_price as unknown as string),
     user_phone: row.user_phone,
     created_at: row.created_at.toISOString(),
+    expires_at: expiresAt.toISOString(),
+    is_active: isActive,
+    days_remaining: computeDaysRemaining(expiresAt),
   };
 }
 
@@ -84,13 +106,16 @@ router.get("/wilayat", (_req: Request, res: Response) => {
 });
 
 router.get("/listings/stats", async (_req: Request, res: Response) => {
+  const now = new Date();
   const allListings = await db.select().from(listingsTable).orderBy(desc(listingsTable.created_at));
-  const total = allListings.length;
-  const for_sale = allListings.filter(l => l.deal_type === "بيع").length;
-  const for_rent = allListings.filter(l => l.deal_type === "إيجار").length;
+  const activeListings = allListings.filter(l => l.is_active && new Date(l.expires_at) > now);
+
+  const total = activeListings.length;
+  const for_sale = activeListings.filter(l => l.deal_type === "بيع").length;
+  const for_rent = activeListings.filter(l => l.deal_type === "إيجار").length;
 
   const wilayaCounts: Record<string, number> = {};
-  for (const l of allListings) {
+  for (const l of activeListings) {
     wilayaCounts[l.wilaya] = (wilayaCounts[l.wilaya] ?? 0) + 1;
   }
   const by_wilaya = Object.entries(wilayaCounts)
@@ -98,7 +123,7 @@ router.get("/listings/stats", async (_req: Request, res: Response) => {
     .sort((a, b) => b.count - a.count)
     .slice(0, 10);
 
-  const recent_listings = allListings.slice(0, 6).map(formatListing);
+  const recent_listings = activeListings.slice(0, 6).map(formatListing);
 
   res.json({ total, for_sale, for_rent, by_wilaya, recent_listings });
 });
@@ -111,16 +136,22 @@ router.get("/listings", async (req: Request, res: Response) => {
   }
 
   const { deal_type, wilaya, municipality, max_price } = parsed.data;
+  const now = new Date();
 
-  const conditions = [];
+  const conditions: ReturnType<typeof eq>[] = [
+    gt(listingsTable.expires_at, now),
+    eq(listingsTable.is_active, true),
+  ];
   if (deal_type) conditions.push(eq(listingsTable.deal_type, deal_type));
   if (wilaya) conditions.push(eq(listingsTable.wilaya, wilaya));
   if (municipality) conditions.push(eq(listingsTable.municipality, municipality));
   if (max_price !== undefined) conditions.push(lte(listingsTable.asking_price, String(max_price)));
 
-  const rows = conditions.length > 0
-    ? await db.select().from(listingsTable).where(and(...conditions)).orderBy(desc(listingsTable.created_at))
-    : await db.select().from(listingsTable).orderBy(desc(listingsTable.created_at));
+  const rows = await db
+    .select()
+    .from(listingsTable)
+    .where(and(...conditions))
+    .orderBy(desc(listingsTable.created_at));
 
   res.json(rows.map(formatListing));
 });
@@ -139,6 +170,9 @@ router.post("/listings", async (req: Request, res: Response) => {
     return;
   }
 
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + LISTING_EXPIRY_DAYS);
+
   const [row] = await db.insert(listingsTable).values({
     deal_type,
     wilaya,
@@ -147,6 +181,8 @@ router.post("/listings", async (req: Request, res: Response) => {
     asking_price: String(asking_price),
     floor_price: String(floor_price),
     user_phone,
+    expires_at: expiresAt,
+    is_active: true,
   }).returning();
 
   res.status(201).json(formatListing(row));
@@ -182,10 +218,15 @@ router.post("/listings/:id/match", async (req: Request, res: Response) => {
   }
 
   const { budget, buyer_phone } = bodyParsed.data;
-
   const [listing] = await db.select().from(listingsTable).where(eq(listingsTable.id, idParsed.data.id));
+
   if (!listing) {
     res.status(404).json({ error: "Listing not found" });
+    return;
+  }
+
+  if (!computeIsActive(listing)) {
+    res.status(400).json({ error: "هذا العقار منتهي الصلاحية أو غير نشط." });
     return;
   }
 
@@ -214,6 +255,44 @@ router.post("/listings/:id/match", async (req: Request, res: Response) => {
       message: "للأسف، ميزانيتك لا تغطي الحد الأدنى لهذا العرض. جرب عرضاً آخر.",
     });
   }
+});
+
+router.post("/listings/:id/renew", async (req: Request, res: Response) => {
+  const idParsed = GetListingParams.safeParse({ id: parseInt(String(req.params.id)) });
+  if (!idParsed.success) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  const bodyParsed = RenewListingBody.safeParse(req.body);
+  if (!bodyParsed.success) {
+    res.status(400).json({ error: "Validation failed" });
+    return;
+  }
+
+  const [listing] = await db.select().from(listingsTable).where(eq(listingsTable.id, idParsed.data.id));
+  if (!listing) {
+    res.status(404).json({ error: "Listing not found" });
+    return;
+  }
+
+  if (listing.user_phone !== bodyParsed.data.seller_phone) {
+    res.status(403).json({ error: "رقم الهاتف غير مطابق للمالك." });
+    return;
+  }
+
+  // Extend from today or current expiry, whichever is later
+  const baseDate = new Date(listing.expires_at) > new Date() ? new Date(listing.expires_at) : new Date();
+  const newExpiresAt = new Date(baseDate);
+  newExpiresAt.setDate(newExpiresAt.getDate() + LISTING_EXPIRY_DAYS);
+
+  const [updated] = await db
+    .update(listingsTable)
+    .set({ expires_at: newExpiresAt, is_active: true })
+    .where(eq(listingsTable.id, idParsed.data.id))
+    .returning();
+
+  res.json(formatListing(updated));
 });
 
 export default router;

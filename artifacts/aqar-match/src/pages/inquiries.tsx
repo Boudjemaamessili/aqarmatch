@@ -2,11 +2,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetSellerInquiries, getGetSellerInquiriesQueryKey } from "@workspace/api-client-react";
+import { useGetSellerInquiries, getGetSellerInquiriesQueryKey, useRenewListing } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { arDZ } from "date-fns/locale";
-import { Building, Building2, Calendar, CheckCircle2, ChevronLeft, Inbox, MapPin, Search, Phone, Receipt, XCircle } from "lucide-react";
+import { Building, Building2, Calendar, CheckCircle2, ChevronLeft, Inbox, MapPin, Search, Phone, Receipt, XCircle, Clock, AlertTriangle, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const phoneSchema = z.object({
   phone: z.string().min(8, "الرجاء إدخال رقم هاتف صحيح").max(20, "رقم الهاتف طويل جداً"),
@@ -39,6 +41,22 @@ export default function InquiriesPage() {
       retry: false,
     },
   });
+
+  const queryClient = useQueryClient();
+  const renew = useRenewListing();
+
+  const handleRenew = (listingId: number) => {
+    renew.mutate(
+      { id: listingId, data: { seller_phone: submittedPhone } },
+      {
+        onSuccess: () => {
+          toast.success("تم تجديد إعلانك لـ 30 يوماً إضافية");
+          queryClient.invalidateQueries({ queryKey: getGetSellerInquiriesQueryKey(submittedPhone) });
+        },
+        onError: () => toast.error("فشل التجديد. الرجاء المحاولة مرة أخرى."),
+      }
+    );
+  };
 
   const onSubmit = (values: PhoneFormValues) => {
     setSubmittedPhone(values.phone);
@@ -162,7 +180,7 @@ export default function InquiriesPage() {
             <h2 className="text-2xl font-bold border-b pb-2">تفاصيل العقارات والاستفسارات</h2>
             
             {data.listings.map((listing) => (
-              <Card key={listing.id} className="overflow-hidden border-muted shadow-sm">
+              <Card key={listing.id} className={`overflow-hidden shadow-sm ${!listing.is_active ? 'border-destructive/30 opacity-80' : 'border-muted'}`}>
                 <div className="bg-muted/30 p-4 md:p-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
@@ -174,7 +192,7 @@ export default function InquiriesPage() {
                         {listing.municipality}، {listing.wilaya}
                       </h3>
                     </div>
-                    <div className="text-muted-foreground flex items-center gap-4 text-sm">
+                    <div className="text-muted-foreground flex items-center gap-4 text-sm flex-wrap">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
                         أضيف في {formatDate(listing.created_at)}
@@ -185,11 +203,52 @@ export default function InquiriesPage() {
                           {listing.neighborhoods.join("، ")}
                         </span>
                       )}
+                      
+                      {!listing.is_active ? (
+                        <Badge variant="destructive" className="flex gap-1 items-center text-[10px] py-0 px-2 h-5">
+                          <AlertTriangle className="w-3 h-3" /> منتهي الصلاحية
+                        </Badge>
+                      ) : listing.days_remaining !== undefined && listing.days_remaining <= 7 ? (
+                        <Badge variant="outline" className="text-amber-600 border-amber-600/30 bg-amber-50 dark:bg-amber-950/30 flex gap-1 items-center text-[10px] py-0 px-2 h-5">
+                          <Clock className="w-3 h-3" /> ينتهي خلال {listing.days_remaining} أيام ⚠
+                        </Badge>
+                      ) : listing.days_remaining !== undefined ? (
+                        <Badge variant="secondary" className="text-emerald-700 bg-emerald-50 dark:text-emerald-400 dark:bg-emerald-950/30 flex gap-1 items-center text-[10px] py-0 px-2 h-5">
+                          <Clock className="w-3 h-3" /> ينتهي خلال {listing.days_remaining} أيام
+                        </Badge>
+                      ) : null}
                     </div>
                   </div>
-                  <div className="text-right md:text-left bg-background p-3 rounded-lg border shadow-sm">
-                    <p className="text-sm text-muted-foreground mb-1">السعر المطلوب</p>
-                    <p className="text-xl font-bold text-primary" dir="ltr">{formatPrice(listing.asking_price)}</p>
+                  <div className="flex flex-col sm:flex-row items-end sm:items-center gap-4">
+                    {(!listing.is_active || (listing.days_remaining !== undefined && listing.days_remaining <= 7)) && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="outline" size="sm" className="gap-2 border-primary/20 text-primary hover:bg-primary/5" data-testid={`button-renew-${listing.id}`}>
+                            <RefreshCw className="w-4 h-4" />
+                            تجديد الإعلان
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle className="text-right">تجديد إعلان العقار</AlertDialogTitle>
+                            <AlertDialogDescription className="text-right">
+                              هل أنت متأكد من رغبتك في تجديد هذا الإعلان لمدة 30 يوماً إضافية؟
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter className="flex-row-reverse sm:flex-row gap-2 w-full justify-start mt-4">
+                            <AlertDialogAction onClick={() => handleRenew(listing.id)} disabled={renew.isPending} className="gap-2" data-testid={`button-confirm-renew-${listing.id}`}>
+                              {renew.isPending && renew.variables?.id === listing.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
+                              تأكيد التجديد
+                            </AlertDialogAction>
+                            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                    <div className="text-right bg-background p-3 rounded-lg border shadow-sm w-full sm:w-auto">
+                      <p className="text-sm text-muted-foreground mb-1">السعر المطلوب</p>
+                      <p className="text-xl font-bold text-primary" dir="ltr">{formatPrice(listing.asking_price)}</p>
+                    </div>
                   </div>
                 </div>
 
