@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetSellerInquiries, getGetSellerInquiriesQueryKey, useRenewListing, useGetNotifications, getGetNotificationsQueryKey, useMarkNotificationsSeen } from "@workspace/api-client-react";
+import { useGetSellerInquiries, getGetSellerInquiriesQueryKey, useRenewListing, useGetNotifications, getGetNotificationsQueryKey, useMarkNotificationsSeen, useFetchSellerAnalytics, getFetchSellerAnalyticsQueryKey } from "@workspace/api-client-react";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 import { arDZ } from "date-fns/locale";
 import { Building, Building2, Calendar, CheckCircle2, ChevronLeft, Inbox, MapPin, Search, Phone, Receipt, XCircle, Clock, AlertTriangle, RefreshCw, Bell, X } from "lucide-react";
@@ -26,6 +27,7 @@ type PhoneFormValues = z.infer<typeof phoneSchema>;
 
 export default function InquiriesPage() {
   const [submittedPhone, setSubmittedPhone] = useState("");
+  const [analyticsDays, setAnalyticsDays] = useState(30);
 
   const form = useForm<PhoneFormValues>({
     resolver: zodResolver(phoneSchema),
@@ -41,6 +43,11 @@ export default function InquiriesPage() {
       retry: false,
     },
   });
+
+  const { data: analyticsData, isLoading: analyticsLoading } = useFetchSellerAnalytics(
+    { phone: submittedPhone, period_days: analyticsDays },
+    { query: { enabled: !!submittedPhone, queryKey: getFetchSellerAnalyticsQueryKey({ phone: submittedPhone, period_days: analyticsDays }) } }
+  );
 
   const queryClient = useQueryClient();
   const renew = useRenewListing();
@@ -249,6 +256,140 @@ export default function InquiriesPage() {
               </CardContent>
             </Card>
           </div>
+
+          {analyticsData && (
+            <div className="space-y-4" data-testid="section-analytics">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-2">
+                <h2 className="text-2xl font-bold">إحصائيات النشاط</h2>
+                <div className="flex bg-muted/50 rounded-lg p-1">
+                  {[7, 30, 90].map((days) => (
+                    <button
+                      key={days}
+                      onClick={() => setAnalyticsDays(days)}
+                      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+                        analyticsDays === days
+                          ? "bg-background shadow-sm text-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/80"
+                      }`}
+                    >
+                      {days === 7 ? "7 أيام" : days === 30 ? "30 يوماً" : "90 يوماً"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {analyticsData.daily_data.every((d) => d.total === 0) ? (
+                <div className="bg-muted/20 border-2 border-dashed rounded-lg p-8 flex flex-col items-center justify-center text-muted-foreground">
+                  <Inbox className="w-10 h-10 mb-3 opacity-20" />
+                  <p>لا توجد استفسارات خلال هذه الفترة</p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <Card className="shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">تطور الاستفسارات اليومية</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-64 w-full mt-4" dir="ltr">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <BarChart data={analyticsData.daily_data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                            <XAxis 
+                              dataKey="date" 
+                              tickFormatter={(val) => {
+                                try {
+                                  return format(new Date(val), "dd/MM", { locale: arDZ });
+                                } catch {
+                                  return val;
+                                }
+                              }}
+                              tick={{ fontSize: 12, fill: '#6b7280' }}
+                              tickLine={false}
+                              axisLine={false}
+                            />
+                            <YAxis 
+                              tick={{ fontSize: 12, fill: '#6b7280' }}
+                              tickLine={false}
+                              axisLine={false}
+                              allowDecimals={false}
+                            />
+                            <Tooltip 
+                              formatter={(value, name) => [value, name === 'total' ? 'إجمالي الاستفسارات' : 'التطابقات']}
+                              labelFormatter={(label) => {
+                                try {
+                                  return format(new Date(label), "dd MMMM yyyy", { locale: arDZ });
+                                } catch {
+                                  return label;
+                                }
+                              }}
+                              contentStyle={{ textAlign: 'right', direction: 'rtl', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                            />
+                            <Legend 
+                              formatter={(value) => value === 'total' ? 'إجمالي الاستفسارات' : 'التطابقات'}
+                              iconType="circle"
+                            />
+                            <Bar dataKey="total" name="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                            <Bar dataKey="matched" name="matched" fill="#16a34a" radius={[4, 4, 0, 0]} maxBarSize={40} />
+                          </BarChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="shadow-sm">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg">أداء العقارات</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader className="bg-muted/10">
+                            <TableRow>
+                              <TableHead className="text-right py-3">العقار</TableHead>
+                              <TableHead className="text-right py-3">الاستفسارات (إجمالي)</TableHead>
+                              <TableHead className="text-right py-3">التطابقات</TableHead>
+                              <TableHead className="text-right py-3">معدل التطابق</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {analyticsData.by_listing.map((listing) => {
+                              const matchRate = listing.total_inquiries > 0 
+                                ? Math.round((listing.matched_count / listing.total_inquiries) * 100) 
+                                : 0;
+                                
+                              return (
+                                <TableRow key={listing.listing_id}>
+                                  <TableCell className="font-medium">
+                                    <div className="flex items-center gap-2">
+                                      <Badge variant={listing.deal_type === "بيع" ? "default" : "secondary"} className="text-[10px] px-1.5 py-0.5">
+                                        {listing.deal_type}
+                                      </Badge>
+                                      <span>{listing.municipality}، {listing.wilaya}</span>
+                                    </div>
+                                  </TableCell>
+                                  <TableCell>{listing.total_inquiries}</TableCell>
+                                  <TableCell>{listing.matched_count}</TableCell>
+                                  <TableCell>
+                                    {listing.total_inquiries > 0 ? (
+                                      <span className={matchRate > 0 ? "text-green-600 font-bold" : "text-muted-foreground"}>
+                                        {matchRate}%
+                                      </span>
+                                    ) : (
+                                      <span className="text-muted-foreground">-</span>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="space-y-6">
             <h2 className="text-2xl font-bold border-b pb-2">تفاصيل العقارات والاستفسارات</h2>

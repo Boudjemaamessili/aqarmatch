@@ -6,11 +6,14 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './dailyDataPoint';
 export * from './expiringListingAlert';
+export * from './fetchSellerAnalyticsParams';
 export * from './getListingsParams';
 export * from './getNotificationsParams';
 export * from './healthStatus';
 export * from './listing';
+export * from './listingAnalytics';
 export * from './listingDealType';
 export * from './listingInput';
 export * from './listingInputDealType';
@@ -23,6 +26,7 @@ export * from './matchRequest';
 export * from './matchResult';
 export * from './notificationSummary';
 export * from './renewRequest';
+export * from './sellerAnalytics';
 export * from './sellerInquirySummary';
 export * from './wilaya';
 export * from './wilayaCount';

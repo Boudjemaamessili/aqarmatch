@@ -152,6 +152,39 @@ export const RenewListingResponse = zod.object({
 
 
 /**
+ * @summary Get daily match attempt trend data for all seller listings
+ */
+export const fetchSellerAnalyticsQueryPeriodDaysDefault = 30;
+
+export const FetchSellerAnalyticsQueryParams = zod.object({
+  "phone": zod.coerce.string(),
+  "period_days": zod.coerce.number().default(fetchSellerAnalyticsQueryPeriodDaysDefault)
+})
+
+export const FetchSellerAnalyticsResponse = zod.object({
+  "phone": zod.string(),
+  "days": zod.number(),
+  "total_inquiries": zod.number(),
+  "total_matched": zod.number(),
+  "daily_data": zod.array(zod.object({
+  "date": zod.coerce.date(),
+  "total": zod.number(),
+  "matched": zod.number()
+})),
+  "by_listing": zod.array(zod.object({
+  "listing_id": zod.number(),
+  "deal_type": zod.string(),
+  "wilaya": zod.string(),
+  "municipality": zod.string(),
+  "total_inquiries": zod.number(),
+  "matched_count": zod.number(),
+  "recent_inquiries": zod.number(),
+  "recent_matched": zod.number()
+}))
+})
+
+
+/**
  * @summary Get in-app notifications for a seller (expiring listings summary)
  */
 export const GetNotificationsQueryParams = zod.object({

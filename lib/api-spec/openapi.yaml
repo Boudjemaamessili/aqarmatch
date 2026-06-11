@@ -171,6 +171,32 @@ paths:
         "404":
           description: Listing not found
 
+  /analytics/seller:
+    get:
+      operationId: fetchSellerAnalytics
+      tags: [listings]
+      summary: Get daily match attempt trend data for all seller listings
+      parameters:
+        - in: query
+          name: phone
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: period_days
+          schema:
+            type: integer
+            default: 30
+      responses:
+        "200":
+          description: Analytics data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SellerAnalytics"
+        "404":
+          description: No listings found
+
   /notifications:
     get:
       operationId: getNotifications
@@ -409,6 +435,77 @@ components:
           type: string
         name_ar:
           type: string
+
+    DailyDataPoint:
+      type: object
+      required:
+        - date
+        - total
+        - matched
+      properties:
+        date:
+          type: string
+          format: date
+        total:
+          type: integer
+        matched:
+          type: integer
+
+    ListingAnalytics:
+      type: object
+      required:
+        - listing_id
+        - deal_type
+        - wilaya
+        - municipality
+        - total_inquiries
+        - matched_count
+        - recent_inquiries
+        - recent_matched
+      properties:
+        listing_id:
+          type: integer
+        deal_type:
+          type: string
+        wilaya:
+          type: string
+        municipality:
+          type: string
+        total_inquiries:
+          type: integer
+        matched_count:
+          type: integer
+        recent_inquiries:
+          type: integer
+        recent_matched:
+          type: integer
+
+    SellerAnalytics:
+      type: object
+      required:
+        - phone
+        - days
+        - total_inquiries
+        - total_matched
+        - daily_data
+        - by_listing
+      properties:
+        phone:
+          type: string
+        days:
+          type: integer
+        total_inquiries:
+          type: integer
+        total_matched:
+          type: integer
+        daily_data:
+          type: array
+          items:
+            $ref: "#/components/schemas/DailyDataPoint"
+        by_listing:
+          type: array
+          items:
+            $ref: "#/components/schemas/ListingAnalytics"
 
     ExpiringListingAlert:
       type: object

@@ -20,6 +20,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
+  FetchSellerAnalyticsParams,
   GetListingsParams,
   GetNotificationsParams,
   HealthStatus,
@@ -32,6 +33,7 @@ import type {
   MatchResult,
   NotificationSummary,
   RenewRequest,
+  SellerAnalytics,
   SellerInquirySummary,
   Wilaya
 } from './api.schemas';
@@ -577,6 +579,90 @@ export const useRenewListing = <TError = ErrorType<void>,
       > => {
       return useMutation(getRenewListingMutationOptions(options));
     }
+
+export const getFetchSellerAnalyticsUrl = (params: FetchSellerAnalyticsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/analytics/seller?${stringifiedParams}` : `/api/analytics/seller`
+}
+
+/**
+ * @summary Get daily match attempt trend data for all seller listings
+ */
+export const fetchSellerAnalytics = async (params: FetchSellerAnalyticsParams, options?: RequestInit): Promise<SellerAnalytics> => {
+
+  return customFetch<SellerAnalytics>(getFetchSellerAnalyticsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getFetchSellerAnalyticsQueryKey = (params?: FetchSellerAnalyticsParams,) => {
+    return [
+    `/api/analytics/seller`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getFetchSellerAnalyticsQueryOptions = <TData = Awaited<ReturnType<typeof fetchSellerAnalytics>>, TError = ErrorType<void>>(params: FetchSellerAnalyticsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof fetchSellerAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getFetchSellerAnalyticsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof fetchSellerAnalytics>>> = ({ signal }) => fetchSellerAnalytics(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof fetchSellerAnalytics>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type FetchSellerAnalyticsQueryResult = NonNullable<Awaited<ReturnType<typeof fetchSellerAnalytics>>>
+export type FetchSellerAnalyticsQueryError = ErrorType<void>
+
+
+/**
+ * @summary Get daily match attempt trend data for all seller listings
+ */
+
+export function useFetchSellerAnalytics<TData = Awaited<ReturnType<typeof fetchSellerAnalytics>>, TError = ErrorType<void>>(
+ params: FetchSellerAnalyticsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof fetchSellerAnalytics>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getFetchSellerAnalyticsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
 
 export const getGetNotificationsUrl = (params: GetNotificationsParams,) => {
   const normalizedParams = new URLSearchParams();

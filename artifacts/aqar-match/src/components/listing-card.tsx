@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { Listing } from "@workspace/api-client-react/src/generated/api.schemas";
+import type { Listing } from "@workspace/api-client-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Tag, Clock, AlertTriangle } from "lucide-react";
@@ -42,7 +42,7 @@ export function ListingCard({ listing }: ListingCardProps) {
 
         {listing.neighborhoods && listing.neighborhoods.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-1">
-            {listing.neighborhoods.slice(0, 3).map((n, i) => (
+            {listing.neighborhoods.slice(0, 3).map((n: string, i: number) => (
               <Badge key={i} variant="outline" className="text-[10px] bg-background/50">
                 {n}
               </Badge>

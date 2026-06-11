@@ -85,6 +85,32 @@ export interface Wilaya {
   name_ar: string;
 }
 
+export interface DailyDataPoint {
+  date: string;
+  total: number;
+  matched: number;
+}
+
+export interface ListingAnalytics {
+  listing_id: number;
+  deal_type: string;
+  wilaya: string;
+  municipality: string;
+  total_inquiries: number;
+  matched_count: number;
+  recent_inquiries: number;
+  recent_matched: number;
+}
+
+export interface SellerAnalytics {
+  phone: string;
+  days: number;
+  total_inquiries: number;
+  total_matched: number;
+  daily_data: DailyDataPoint[];
+  by_listing: ListingAnalytics[];
+}
+
 export interface ExpiringListingAlert {
   listing_id: number;
   deal_type: string;
@@ -148,6 +174,11 @@ deal_type?: string;
 wilaya?: string;
 municipality?: string;
 max_price?: number;
+};
+
+export type FetchSellerAnalyticsParams = {
+phone: string;
+period_days?: number;
 };
 
 export type GetNotificationsParams = {
