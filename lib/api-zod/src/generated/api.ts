@@ -152,6 +152,42 @@ export const RenewListingResponse = zod.object({
 
 
 /**
+ * @summary Get in-app notifications for a seller (expiring listings summary)
+ */
+export const GetNotificationsQueryParams = zod.object({
+  "phone": zod.coerce.string()
+})
+
+export const GetNotificationsResponse = zod.object({
+  "phone": zod.string(),
+  "unseen_count": zod.number(),
+  "has_alerts": zod.boolean(),
+  "expiring_listings": zod.array(zod.object({
+  "listing_id": zod.number(),
+  "deal_type": zod.string(),
+  "wilaya": zod.string(),
+  "municipality": zod.string(),
+  "days_remaining": zod.number(),
+  "total_inquiries": zod.number(),
+  "matched_count": zod.number(),
+  "asking_price": zod.number()
+}))
+})
+
+
+/**
+ * @summary Mark all notifications as seen for a seller
+ */
+export const MarkNotificationsSeenBody = zod.object({
+  "phone": zod.string()
+})
+
+export const MarkNotificationsSeenResponse = zod.object({
+  "updated": zod.number()
+})
+
+
+/**
  * @summary Get all listings and match attempts for a seller by phone number
  */
 export const GetSellerInquiriesParams = zod.object({

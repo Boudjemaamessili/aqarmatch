@@ -85,6 +85,32 @@ export interface Wilaya {
   name_ar: string;
 }
 
+export interface ExpiringListingAlert {
+  listing_id: number;
+  deal_type: string;
+  wilaya: string;
+  municipality: string;
+  days_remaining: number;
+  total_inquiries: number;
+  matched_count: number;
+  asking_price: number;
+}
+
+export interface NotificationSummary {
+  phone: string;
+  unseen_count: number;
+  has_alerts: boolean;
+  expiring_listings: ExpiringListingAlert[];
+}
+
+export interface MarkSeenRequest {
+  phone: string;
+}
+
+export interface MarkSeenResult {
+  updated: number;
+}
+
 export interface MatchAttempt {
   id: number;
   buyer_phone: string;
@@ -122,5 +148,9 @@ deal_type?: string;
 wilaya?: string;
 municipality?: string;
 max_price?: number;
+};
+
+export type GetNotificationsParams = {
+phone: string;
 };
 

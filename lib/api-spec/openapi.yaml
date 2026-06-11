@@ -13,6 +13,8 @@ tags:
     description: Property listing operations
   - name: stats
     description: Statistics and aggregates
+  - name: notifications
+    description: In-app seller notifications
 
 paths:
   /healthz:
@@ -168,6 +170,44 @@ paths:
           description: Phone number does not match listing owner
         "404":
           description: Listing not found
+
+  /notifications:
+    get:
+      operationId: getNotifications
+      tags: [notifications]
+      summary: Get in-app notifications for a seller (expiring listings summary)
+      parameters:
+        - in: query
+          name: phone
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Notifications for the seller
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationSummary"
+
+  /notifications/mark-seen:
+    post:
+      operationId: markNotificationsSeen
+      tags: [notifications]
+      summary: Mark all notifications as seen for a seller
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarkSeenRequest"
+      responses:
+        "200":
+          description: Marked as seen
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MarkSeenResult"
 
   /sellers/{phone}/inquiries:
     get:
@@ -369,6 +409,70 @@ components:
           type: string
         name_ar:
           type: string
+
+    ExpiringListingAlert:
+      type: object
+      required:
+        - listing_id
+        - deal_type
+        - wilaya
+        - municipality
+        - days_remaining
+        - total_inquiries
+        - matched_count
+        - asking_price
+      properties:
+        listing_id:
+          type: integer
+        deal_type:
+          type: string
+        wilaya:
+          type: string
+        municipality:
+          type: string
+        days_remaining:
+          type: integer
+        total_inquiries:
+          type: integer
+        matched_count:
+          type: integer
+        asking_price:
+          type: number
+
+    NotificationSummary:
+      type: object
+      required:
+        - phone
+        - unseen_count
+        - expiring_listings
+        - has_alerts
+      properties:
+        phone:
+          type: string
+        unseen_count:
+          type: integer
+        has_alerts:
+          type: boolean
+        expiring_listings:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExpiringListingAlert"
+
+    MarkSeenRequest:
+      type: object
+      required:
+        - phone
+      properties:
+        phone:
+          type: string
+
+    MarkSeenResult:
+      type: object
+      required:
+        - updated
+      properties:
+        updated:
+          type: integer
 
     MatchAttempt:
       type: object

@@ -6,7 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './expiringListingAlert';
 export * from './getListingsParams';
+export * from './getNotificationsParams';
 export * from './healthStatus';
 export * from './listing';
 export * from './listingDealType';
@@ -14,9 +16,12 @@ export * from './listingInput';
 export * from './listingInputDealType';
 export * from './listingStats';
 export * from './listingWithInquiries';
+export * from './markSeenRequest';
+export * from './markSeenResult';
 export * from './matchAttempt';
 export * from './matchRequest';
 export * from './matchResult';
+export * from './notificationSummary';
 export * from './renewRequest';
 export * from './sellerInquirySummary';
 export * from './wilaya';

@@ -21,12 +21,16 @@ import type {
 
 import type {
   GetListingsParams,
+  GetNotificationsParams,
   HealthStatus,
   Listing,
   ListingInput,
   ListingStats,
+  MarkSeenRequest,
+  MarkSeenResult,
   MatchRequest,
   MatchResult,
+  NotificationSummary,
   RenewRequest,
   SellerInquirySummary,
   Wilaya
@@ -572,6 +576,161 @@ export const useRenewListing = <TError = ErrorType<void>,
         TContext
       > => {
       return useMutation(getRenewListingMutationOptions(options));
+    }
+
+export const getGetNotificationsUrl = (params: GetNotificationsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/notifications?${stringifiedParams}` : `/api/notifications`
+}
+
+/**
+ * @summary Get in-app notifications for a seller (expiring listings summary)
+ */
+export const getNotifications = async (params: GetNotificationsParams, options?: RequestInit): Promise<NotificationSummary> => {
+
+  return customFetch<NotificationSummary>(getGetNotificationsUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetNotificationsQueryKey = (params?: GetNotificationsParams,) => {
+    return [
+    `/api/notifications`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getGetNotificationsQueryOptions = <TData = Awaited<ReturnType<typeof getNotifications>>, TError = ErrorType<unknown>>(params: GetNotificationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetNotificationsQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getNotifications>>> = ({ signal }) => getNotifications(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetNotificationsQueryResult = NonNullable<Awaited<ReturnType<typeof getNotifications>>>
+export type GetNotificationsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Get in-app notifications for a seller (expiring listings summary)
+ */
+
+export function useGetNotifications<TData = Awaited<ReturnType<typeof getNotifications>>, TError = ErrorType<unknown>>(
+ params: GetNotificationsParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getNotifications>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetNotificationsQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getMarkNotificationsSeenUrl = () => {
+
+
+
+
+  return `/api/notifications/mark-seen`
+}
+
+/**
+ * @summary Mark all notifications as seen for a seller
+ */
+export const markNotificationsSeen = async (markSeenRequest: MarkSeenRequest, options?: RequestInit): Promise<MarkSeenResult> => {
+
+  return customFetch<MarkSeenResult>(getMarkNotificationsSeenUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      markSeenRequest,)
+  }
+);}
+
+
+
+
+export const getMarkNotificationsSeenMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,{data: BodyType<MarkSeenRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,{data: BodyType<MarkSeenRequest>}, TContext> => {
+
+const mutationKey = ['markNotificationsSeen'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markNotificationsSeen>>, {data: BodyType<MarkSeenRequest>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  markNotificationsSeen(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkNotificationsSeenMutationResult = NonNullable<Awaited<ReturnType<typeof markNotificationsSeen>>>
+    export type MarkNotificationsSeenMutationBody = BodyType<MarkSeenRequest>
+    export type MarkNotificationsSeenMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Mark all notifications as seen for a seller
+ */
+export const useMarkNotificationsSeen = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markNotificationsSeen>>, TError,{data: BodyType<MarkSeenRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markNotificationsSeen>>,
+        TError,
+        {data: BodyType<MarkSeenRequest>},
+        TContext
+      > => {
+      return useMutation(getMarkNotificationsSeenMutationOptions(options));
     }
 
 export const getGetSellerInquiriesUrl = (phone: string,) => {

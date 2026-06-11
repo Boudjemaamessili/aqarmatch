@@ -9,7 +9,7 @@ export function Layout({ children }: { children: ReactNode }) {
     { href: "/", label: "الرئيسية", icon: Home },
     { href: "/listings", label: "تصفح العقارات", icon: Search },
     { href: "/listings/new", label: "أضف عقارك", icon: PlusCircle },
-    { href: "/inquiries", label: "استفساراتي", icon: Inbox },
+    { href: "/inquiries", label: "استفساراتي", icon: Inbox, hasBadge: true },
   ];
 
   return (
@@ -33,7 +33,15 @@ export function Layout({ children }: { children: ReactNode }) {
                   }`}
                   data-testid={`link-nav-${item.href.replace("/", "") || "home"}`}
                 >
-                  <item.icon className="w-4 h-4" />
+                  <div className="relative">
+                    <item.icon className="w-4 h-4" />
+                    {item.hasBadge && (
+                      <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                      </span>
+                    )}
+                  </div>
                   {item.label}
                 </Link>
               );

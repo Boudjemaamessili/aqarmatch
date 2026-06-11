@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useGetSellerInquiries, getGetSellerInquiriesQueryKey, useRenewListing } from "@workspace/api-client-react";
+import { useGetSellerInquiries, getGetSellerInquiriesQueryKey, useRenewListing, useGetNotifications, getGetNotificationsQueryKey, useMarkNotificationsSeen } from "@workspace/api-client-react";
 import { format } from "date-fns";
 import { arDZ } from "date-fns/locale";
-import { Building, Building2, Calendar, CheckCircle2, ChevronLeft, Inbox, MapPin, Search, Phone, Receipt, XCircle, Clock, AlertTriangle, RefreshCw } from "lucide-react";
+import { Building, Building2, Calendar, CheckCircle2, ChevronLeft, Inbox, MapPin, Search, Phone, Receipt, XCircle, Clock, AlertTriangle, RefreshCw, Bell, X } from "lucide-react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -45,6 +45,28 @@ export default function InquiriesPage() {
   const queryClient = useQueryClient();
   const renew = useRenewListing();
 
+  const { data: notifData } = useGetNotifications(
+    { phone: submittedPhone },
+    {
+      query: {
+        enabled: !!submittedPhone,
+        queryKey: getGetNotificationsQueryKey({ phone: submittedPhone }),
+      },
+    }
+  );
+
+  const markSeen = useMarkNotificationsSeen();
+  const handleDismissAlerts = () => {
+    markSeen.mutate(
+      { data: { phone: submittedPhone } },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getGetNotificationsQueryKey({ phone: submittedPhone }) });
+        },
+      }
+    );
+  };
+
   const handleRenew = (listingId: number) => {
     renew.mutate(
       { id: listingId, data: { seller_phone: submittedPhone } },
@@ -52,6 +74,7 @@ export default function InquiriesPage() {
         onSuccess: () => {
           toast.success("تم تجديد إعلانك لـ 30 يوماً إضافية");
           queryClient.invalidateQueries({ queryKey: getGetSellerInquiriesQueryKey(submittedPhone) });
+          queryClient.invalidateQueries({ queryKey: getGetNotificationsQueryKey({ phone: submittedPhone }) });
         },
         onError: () => toast.error("فشل التجديد. الرجاء المحاولة مرة أخرى."),
       }
@@ -152,6 +175,57 @@ export default function InquiriesPage() {
 
       {data && (
         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          {notifData?.has_alerts && (
+            <div 
+              className="p-4 md:p-6 bg-amber-50 dark:bg-amber-950/20 border-r-4 border-r-amber-500 rounded-l-lg border-y border-l border-amber-200 dark:border-amber-900/30 animate-in fade-in slide-in-from-top-4 duration-500 relative shadow-sm"
+              data-testid="banner-expiry-alert"
+            >
+              <Button
+                variant="ghost"
+                size="icon"
+                className="absolute top-2 left-2 text-amber-700 hover:text-amber-900 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/50 h-8 w-8 rounded-full"
+                onClick={handleDismissAlerts}
+                data-testid="button-dismiss-alert"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+              
+              <div className="flex items-center gap-3 mb-4 text-amber-800 dark:text-amber-500">
+                <Bell className="w-6 h-6 animate-pulse" />
+                <h3 className="font-bold text-lg">تنبيه: عقاراتك تقترب من انتهاء الصلاحية</h3>
+              </div>
+              
+              <div className="space-y-3">
+                {notifData.expiring_listings?.map((listing) => (
+                  <div key={listing.listing_id} className="bg-white/60 dark:bg-black/20 p-3 rounded border border-amber-100 dark:border-amber-900/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div className="flex flex-wrap items-center gap-2 text-sm text-amber-900 dark:text-amber-400">
+                      <Badge variant={listing.deal_type === "بيع" ? "default" : "secondary"} className="text-xs bg-amber-200 text-amber-900 hover:bg-amber-300 dark:bg-amber-900 dark:text-amber-100">
+                        {listing.deal_type}
+                      </Badge>
+                      <span className="font-semibold">عقار في {listing.municipality}، {listing.wilaya}</span>
+                      <span className="hidden md:inline text-amber-300 dark:text-amber-800">•</span>
+                      <span className="flex items-center gap-1 font-bold text-amber-700 dark:text-amber-500"><Clock className="w-3.5 h-3.5"/> ينتهي خلال {listing.days_remaining} أيام</span>
+                      <span className="hidden md:inline text-amber-300 dark:text-amber-800">•</span>
+                      <span>{listing.total_inquiries} استفسارات</span>
+                      <span className="hidden md:inline text-amber-300 dark:text-amber-800">•</span>
+                      <span>{listing.matched_count} تطابق</span>
+                    </div>
+                    
+                    <Button 
+                      size="sm" 
+                      className="bg-amber-600 hover:bg-amber-700 text-white whitespace-nowrap gap-2"
+                      onClick={() => handleRenew(listing.listing_id)}
+                      disabled={renew.isPending && renew.variables?.id === listing.listing_id}
+                    >
+                      {renew.isPending && renew.variables?.id === listing.listing_id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <RefreshCw className="w-4 h-4" />}
+                      تجديد الآن
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="bg-primary/5 border-primary/10">
               <CardContent className="p-6 flex flex-col items-center text-center">
