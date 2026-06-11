@@ -7,7 +7,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
   const navItems = [
     { href: "/", label: "الرئيسية", icon: Home },
-    { href: "/listings", label: "تصفح العقارات", icon: Search },
+    { href: "/listings", label: "تصفح", icon: Search },
     { href: "/listings/new", label: "أضف عقارك", icon: PlusCircle },
     { href: "/inquiries", label: "استفساراتي", icon: Inbox, hasBadge: true },
   ];
@@ -21,6 +21,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <span className="text-xl font-bold tracking-tight">عقارMatch</span>
           </Link>
 
+          {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-6">
             {navItems.map((item) => {
               const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
@@ -50,16 +51,47 @@ export function Layout({ children }: { children: ReactNode }) {
         </div>
       </header>
 
-      <main className="flex-1">
+      <main className="flex-1 pb-20 md:pb-0">
         {children}
       </main>
 
-      <footer className="bg-primary/5 border-t border-border mt-12 py-8 text-center text-muted-foreground">
+      <footer className="hidden md:block bg-primary/5 border-t border-border mt-12 py-8 text-center text-muted-foreground">
         <div className="container mx-auto px-4">
           <Building2 className="w-8 h-8 mx-auto mb-4 opacity-50" />
           <p>عقارMatch © {new Date().getFullYear()} - المنصة الذكية للعقارات في الجزائر</p>
         </div>
       </footer>
+
+      {/* Mobile bottom nav */}
+      <nav
+        className="md:hidden fixed bottom-0 inset-x-0 z-50 bg-primary text-primary-foreground border-t border-primary-foreground/10 flex items-stretch"
+        dir="rtl"
+      >
+        {navItems.map((item) => {
+          const isActive = location === item.href || (item.href !== "/" && location.startsWith(item.href));
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 text-[10px] font-medium transition-colors ${
+                isActive ? "text-accent" : "text-primary-foreground/70"
+              }`}
+              data-testid={`link-mobile-nav-${item.href.replace("/", "") || "home"}`}
+            >
+              <div className="relative">
+                <item.icon className={`w-5 h-5 ${isActive ? "stroke-[2.5]" : ""}`} />
+                {item.hasBadge && (
+                  <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                  </span>
+                )}
+              </div>
+              <span className="leading-none">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
     </div>
   );
 }
