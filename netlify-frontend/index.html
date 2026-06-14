@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عقارMatch — المنصة الذكية للعقارات</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f5f5f0; color: #1a1a2e; direction: rtl; }
+    header { background: #0F2744; color: white; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+    header h1 { font-size: 1.5rem; font-weight: 700; }
+    header span { color: #E8A87C; }
+    nav { display: flex; gap: 1rem; }
+    nav button { background: transparent; border: 1.5px solid rgba(255,255,255,0.4); color: white; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
+    nav button:hover, nav button.active { background: #E8A87C; border-color: #E8A87C; color: #0F2744; font-weight: 600; }
+    .container { max-width: 680px; margin: 2rem auto; padding: 0 1rem; }
+    .card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
+    .card h2 { font-size: 1.2rem; color: #0F2744; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f0f0e8; }
+    .form-group { margin-bottom: 1.25rem; }
+    label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 0.4rem; }
+    input, select, textarea { width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; font-family: inherit; direction: rtl; transition: border-color 0.2s; }
+    input:focus, select:focus { outline: none; border-color: #0F2744; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .secret-field { background: #f8f6ff; border: 1.5px dashed #b8a8e8; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
+    .secret-field label { color: #6b4fa0; }
+    .secret-field input { border-color: #c8b8f0; background: white; }
+    .secret-note { font-size: 0.78rem; color: #888; margin-top: 0.35rem; display: flex; align-items: center; gap: 0.3rem; }
+    .btn { width: 100%; padding: 0.85rem; background: #0F2744; color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: #1a3a5c; }
+    .btn:disabled { background: #aaa; cursor: not-allowed; }
+    .btn-orange { background: #E8A87C; color: #0F2744; }
+    .btn-orange:hover { background: #d4925f; }
+    .alert { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
+    .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+    .alert-error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
+    .listing-card { background: white; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 6px rgba(0,0,0,0.07); border-right: 4px solid #0F2744; }
+    .listing-card h3 { font-size: 1rem; color: #0F2744; margin-bottom: 0.5rem; }
+    .listing-meta { font-size: 0.82rem; color: #666; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tag { background: #eef2f8; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; }
+    .price-badge { background: #0F2744; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
+    .match-form { margin-top: 0.75rem; display: flex; gap: 0.5rem; }
+    .match-form input { flex: 1; padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+    .match-form button { padding: 0.5rem 1rem; background: #E8A87C; color: #0F2744; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+    .page { display: none; }
+    .page.active { display: block; }
+    .loading { text-align: center; color: #888; padding: 2rem; }
+    .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+    .stat-box { background: white; border-radius: 10px; padding: 1rem; text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.07); }
+    .stat-num { font-size: 1.8rem; font-weight: 700; color: #0F2744; }
+    .stat-label { font-size: 0.78rem; color: #888; margin-top: 0.2rem; }
+    .segment { display: flex; border: 1.5px solid #ddd; border-radius: 8px; overflow: hidden; margin-bottom: 0; }
+    .segment button { flex: 1; padding: 0.6rem; border: none; background: white; cursor: pointer; font-size: 0.9rem; font-family: inherit; transition: all 0.2s; }
+    .segment button.active { background: #0F2744; color: white; font-weight: 600; }
+    .neighborhoods-input { position: relative; }
+    .neighborhoods-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
+    .neighborhood-tag { background: #0F2744; color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; display: flex; align-items: center; gap: 0.3rem; }
+    .neighborhood-tag button { background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem; line-height: 1; }
+    footer { text-align: center; padding: 2rem; color: #888; font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>عقار<span>Match</span></h1>
+  <nav>
+    <button class="active" onclick="showPage('home')">الرئيسية</button>
+    <button onclick="showPage('seller')">أنشر عقاراً</button>
+    <button onclick="showPage('buyer')">ابحث عن عقار</button>
+  </nav>
+</header>
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="container">
+    <div class="stat-grid" id="stats-grid">
+      <div class="stat-box"><div class="stat-num" id="stat-total">—</div><div class="stat-label">عقار نشط</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-sale">—</div><div class="stat-label">للبيع</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-rent">—</div><div class="stat-label">للإيجار</div></div>
+    </div>
+    <div class="card">
+      <h2>🏠 عقارMatch — الوكيل الرقمي المحايد</h2>
+      <p style="color:#555;line-height:1.7;margin-bottom:1rem">
+        المنصة الذكية التي تجمع البائع والمشتري سراً، ولا تكشف بيانات أي طرف للآخر إلا عند وجود تطابق حقيقي في الموقع والسعر.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px">
+          <div style="font-size:1.3rem;margin-bottom:0.4rem">🔒</div>
+          <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">سعر تفاوض سري</div>
+          <div style="font-size:0.8rem;color:#666">النظام يتفاوض بدلاً عنك دون كشف حدودك</div>
+        </div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px">
+          <div style="font-size:1.3rem;margin-bottom:0.4rem">📱</div>
+          <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">واتساب تلقائي</div>
+          <div style="font-size:0.8rem;color:#666">تُشعَر فوراً عند وجود تطابق حقيقي</div>
+        </div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px">
+          <div style="font-size:1.3rem;margin-bottom:0.4rem">👥</div>
+          <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">خصوصية متبادلة</div>
+          <div style="font-size:0.8rem;color:#666">لا أحد يرى بيانات الآخر قبل الاتفاق</div>
+        </div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px">
+          <div style="font-size:1.3rem;margin-bottom:0.4rem">📍</div>
+          <div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">توفيق بالحي</div>
+          <div style="font-size:0.8rem;color:#666">مطابقة دقيقة حتى مستوى الحي</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SELLER -->
+<div class="page" id="page-seller">
+  <div class="container">
+    <div class="card">
+      <h2>📋 نشر عقار جديد</h2>
+      <div id="seller-alert"></div>
+
+      <div class="form-group">
+        <label>نوع الصفقة</label>
+        <div class="segment">
+          <button class="active" id="btn-sale" onclick="setDealType('بيع')">بيع</button>
+          <button id="btn-rent" onclick="setDealType('إيجار')">إيجار</button>
+        </div>
+        <input type="hidden" id="deal_type" value="بيع">
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>الولاية</label>
+          <input type="text" id="wilaya" placeholder="مثال: المدية">
+        </div>
+        <div class="form-group">
+          <label>البلدية</label>
+          <input type="text" id="municipality" placeholder="مثال: قصر البخاري">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>الأحياء (أضف حياً واحداً أو أكثر)</label>
+        <div style="display:flex;gap:0.5rem">
+          <input type="text" id="neighborhood-input" placeholder="اكتب اسم الحي ثم اضغط إضافة">
+          <button onclick="addNeighborhood()" style="padding:0.65rem 1rem;background:#0F2744;color:white;border:none;border-radius:8px;cursor:pointer;white-space:nowrap">إضافة</button>
+        </div>
+        <div class="neighborhoods-tags" id="neighborhoods-tags"></div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>السعر المعلن (دج)</label>
+          <input type="number" id="asking_price" placeholder="مثال: 15000">
+        </div>
+        <div class="form-group">
+          <label>رقم واتساب</label>
+          <input type="tel" id="user_phone" placeholder="0550000000">
+        </div>
+      </div>
+
+      <div class="secret-field">
+        <label>🔒 أدنى سعر مقبول (سري — لا يراه أحد)</label>
+        <input type="number" id="floor_price" placeholder="مثال: 12000">
+        <div class="secret-note">🛡️ هذا الرقم محفوظ بسرية تامة ولا يُشارك مع أي طرف آخر</div>
+      </div>
+
+      <button class="btn" onclick="submitListing()" id="submit-btn">نشر العقار</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUYER -->
+<div class="page" id="page-buyer">
+  <div class="container">
+    <div class="card" style="padding:1rem 1.5rem">
+      <h2>🔍 تصفية العقارات</h2>
+      <div class="row">
+        <div class="form-group" style="margin-bottom:0">
+          <label>نوع الصفقة</label>
+          <select id="filter-deal" onchange="loadListings()">
+            <option value="">الكل</option>
+            <option value="بيع">بيع</option>
+            <option value="إيجار">إيجار</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label>الولاية</label>
+          <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        </div>
+      </div>
+    </div>
+
+    <div id="listings-container">
+      <div class="loading">جاري التحميل...</div>
+    </div>
+  </div>
+</div>
+
+<footer>عقارMatch © 2026 — المنصة الذكية للعقارات في الجزائر</footer>
+
+<script>
+  const API = 'https://aqarmatch.onrender.com';
+  let neighborhoods = [];
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    event.target.classList.add('active');
+    if (name === 'buyer') loadListings();
+    if (name === 'home') loadStats();
+  }
+
+  function setDealType(type) {
+    document.getElementById('deal_type').value = type;
+    document.getElementById('btn-sale').classList.toggle('active', type === 'بيع');
+    document.getElementById('btn-rent').classList.toggle('active', type === 'إيجار');
+  }
+
+  function addNeighborhood() {
+    const input = document.getElementById('neighborhood-input');
+    const val = input.value.trim();
+    if (!val) return;
+    if (!neighborhoods.includes(val)) {
+      neighborhoods.push(val);
+      renderNeighborhoods();
+    }
+    input.value = '';
+  }
+
+  document.getElementById('neighborhood-input').addEventListener('keypress', e => {
+    if (e.key === 'Enter') { e.preventDefault(); addNeighborhood(); }
+  });
+
+  function removeNeighborhood(n) {
+    neighborhoods = neighborhoods.filter(x => x !== n);
+    renderNeighborhoods();
+  }
+
+  function renderNeighborhoods() {
+    const container = document.getElementById('neighborhoods-tags');
+    container.innerHTML = neighborhoods.map(n =>
+      `<span class="neighborhood-tag">${n}<button onclick="removeNeighborhood('${n}')">&times;</button></span>`
+    ).join('');
+  }
+
+  function showAlert(id, msg, type) {
+    document.getElementById(id).innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
+  }
+
+  async function submitListing() {
+    const btn = document.getElementById('submit-btn');
+    const deal_type = document.getElementById('deal_type').value;
+    const wilaya = document.getElementById('wilaya').value.trim();
+    const municipality = document.getElementById('municipality').value.trim();
+    const asking_price = parseFloat(document.getElementById('asking_price').value);
+    const floor_price = parseFloat(document.getElementById('floor_price').value);
+    const user_phone = document.getElementById('user_phone').value.trim();
+
+    if (!wilaya || !municipality || !neighborhoods.length || !asking_price || !floor_price || !user_phone) {
+      showAlert('seller-alert', 'يرجى ملء جميع الحقول الإلزامية', 'error'); return;
+    }
+    if (floor_price > asking_price) {
+      showAlert('seller-alert', 'السعر السري يجب أن يكون أقل من أو يساوي السعر المعلن', 'error'); return;
+    }
+
+    btn.disabled = true; btn.textContent = 'جاري النشر...';
+    try {
+      const res = await fetch(`${API}/api/listings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ deal_type, wilaya, municipality, neighborhoods, asking_price, floor_price, user_phone })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showAlert('seller-alert', '✅ تم نشر عقارك بنجاح! سيتم إشعارك عبر واتساب عند وجود مشترٍ مهتم.', 'success');
+        neighborhoods = []; renderNeighborhoods();
+        document.getElementById('wilaya').value = '';
+        document.getElementById('municipality').value = '';
+        document.getElementById('asking_price').value = '';
+        document.getElementById('floor_price').value = '';
+        document.getElementById('user_phone').value = '';
+      } else {
+        showAlert('seller-alert', data.error || 'حدث خطأ، يرجى المحاولة مجدداً', 'error');
+      }
+    } catch(e) {
+      showAlert('seller-alert', 'تعذر الاتصال بالخادم، يرجى المحاولة مجدداً', 'error');
+    }
+    btn.disabled = false; btn.textContent = 'نشر العقار';
+  }
+
+  async function loadListings() {
+    const container = document.getElementById('listings-container');
+    container.innerHTML = '<div class="loading">جاري التحميل...</div>';
+    const deal = document.getElementById('filter-deal').value;
+    const wilaya = document.getElementById('filter-wilaya').value.trim();
+    let url = `${API}/api/listings?`;
+    if (deal) url += `deal_type=${encodeURIComponent(deal)}&`;
+    if (wilaya) url += `wilaya=${encodeURIComponent(wilaya)}&`;
+    try {
+      const res = await fetch(url);
+      const listings = await res.json();
+      if (!listings.length) {
+        container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات متاحة حالياً</div>'; return;
+      }
+      container.innerHTML = listings.map(l => `
+        <div class="listing-card">
+          <h3>${l.deal_type} — ${l.wilaya}، ${l.municipality}</h3>
+          <div class="listing-meta">
+            ${l.neighborhoods.map(n => `<span class="tag">📍 ${n}</span>`).join('')}
+            <span class="tag">⏰ ${l.days_remaining} يوم متبقي</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+            <span class="price-badge">${l.asking_price.toLocaleString()} دج</span>
+          </div>
+          <div class="match-form" id="match-form-${l.id}">
+            <input type="number" placeholder="ميزانيتك (دج)" id="budget-${l.id}">
+            <input type="tel" placeholder="رقم واتساب" id="phone-${l.id}" style="max-width:140px">
+            <button onclick="checkMatch(${l.id})">فحص التطابق</button>
+          </div>
+          <div id="match-result-${l.id}"></div>
+        </div>
+      `).join('');
+    } catch(e) {
+      container.innerHTML = '<div class="card" style="text-align:center;color:#c62828">تعذر تحميل العقارات</div>';
+    }
+  }
+
+  async function checkMatch(id) {
+    const budget = parseFloat(document.getElementById(`budget-${id}`).value);
+    const buyer_phone = document.getElementById(`phone-${id}`).value.trim();
+    const resultDiv = document.getElementById(`match-result-${id}`);
+    if (!budget || !buyer_phone) {
+      resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">يرجى إدخال الميزانية ورقم الواتساب</div>'; return;
+    }
+    resultDiv.innerHTML = '<div style="color:#888;font-size:0.85rem;margin-top:0.5rem">جاري الفحص...</div>';
+    try {
+      const res = await fetch(`${API}/api/listings/${id}/match`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ budget, buyer_phone })
+      });
+      const data = await res.json();
+      resultDiv.innerHTML = `<div class="alert alert-${data.matched ? 'success' : 'error'}" style="margin-top:0.5rem">${data.message}</div>`;
+    } catch(e) {
+      resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">تعذر الاتصال بالخادم</div>';
+    }
+  }
+
+  async function loadStats() {
+    try {
+      const res = await fetch(`${API}/api/listings/stats`);
+      const data = await res.json();
+      document.getElementById('stat-total').textContent = data.total ?? 0;
+      document.getElementById('stat-sale').textContent = data.for_sale ?? 0;
+      document.getElementById('stat-rent').textContent = data.for_rent ?? 0;
+    } catch(e) {}
+  }
+
+  loadStats();
+</script>
+</body>
+</html>
