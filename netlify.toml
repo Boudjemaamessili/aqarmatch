@@ -1,4 +1,4 @@
 ﻿[build]
-  base    = "netlify-frontend"
+  base = "netlify-frontend"
   publish = "netlify-frontend"
   command = ""
