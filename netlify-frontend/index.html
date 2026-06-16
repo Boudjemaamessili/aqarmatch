@@ -22,8 +22,7 @@
     input, select, textarea { width: 100%; padding: 0.65rem 0.9rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.95rem; font-family: inherit; direction: rtl; transition: border-color 0.2s; }
     input:focus, select:focus { outline: none; border-color: #0F2744; }
     .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
-    @media (max-width: 500px) { .row { grid-template-columns: 1fr; } .row3 { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 500px) { .row { grid-template-columns: 1fr; } }
     .secret-field { background: #f8f6ff; border: 1.5px dashed #b8a8e8; border-radius: 10px; padding: 1rem; margin-bottom: 1.25rem; }
     .secret-field label { color: #6b4fa0; }
     .secret-note { font-size: 0.78rem; color: #888; margin-top: 0.35rem; }
@@ -33,15 +32,7 @@
     .alert { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
     .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
     .alert-error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
-    /* بطاقة العقار */
-    .listing-card { background: white; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-right: 4px solid #0F2744; overflow: hidden; }
-    .listing-card-images { width: 100%; height: 180px; overflow: hidden; position: relative; background: #eef2f8; }
-    .listing-card-images img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; }
-    .listing-card-images .no-img { display: flex; align-items: center; justify-content: center; height: 100%; color: #bbb; font-size: 3rem; }
-    .listing-card-images .img-count { position: absolute; bottom: 8px; left: 8px; background: rgba(0,0,0,0.6); color: white; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 20px; }
-    .img-gallery { display: flex; gap: 4px; height: 100%; }
-    .img-gallery img { flex: 1; object-fit: cover; cursor: pointer; min-width: 0; }
-    .listing-card-body { padding: 1.25rem; }
+    .listing-card { background: white; border-radius: 10px; padding: 1.25rem; margin-bottom: 1rem; box-shadow: 0 1px 6px rgba(0,0,0,0.07); border-right: 4px solid #0F2744; }
     .listing-card h3 { font-size: 1rem; color: #0F2744; margin-bottom: 0.5rem; }
     .listing-meta { font-size: 0.82rem; color: #666; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
     .tag { background: #eef2f8; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; }
@@ -62,7 +53,8 @@
     .neighborhoods-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.4rem; }
     .neighborhood-tag { background: #0F2744; color: white; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; display: flex; align-items: center; gap: 0.3rem; }
     .neighborhood-tag button { background: none; border: none; color: white; cursor: pointer; font-size: 0.9rem; }
-    /* صور */
+
+    /* صور العقار */
     .image-upload-area { border: 2px dashed #ddd; border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s; background: #fafafa; }
     .image-upload-area:hover { border-color: #0F2744; }
     .image-upload-area input { display: none; }
@@ -70,52 +62,41 @@
     .image-previews { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
     .image-preview-item { position: relative; width: 80px; height: 80px; }
     .image-preview-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
-    .image-preview-item button { position: absolute; top: -6px; left: -6px; background: #c62828; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.75rem; }
-    /* lightbox */
-    .lightbox { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; align-items: center; justify-content: center; flex-direction: column; gap: 1rem; }
-    .lightbox.open { display: flex; }
-    .lightbox img { max-width: 95vw; max-height: 80vh; border-radius: 8px; }
-    .lightbox-close { position: absolute; top: 1rem; left: 1rem; background: none; border: none; color: white; font-size: 2rem; cursor: pointer; }
-    .lightbox-nav { display: flex; gap: 1rem; }
-    .lightbox-nav button { background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1.2rem; border-radius: 8px; cursor: pointer; font-size: 1rem; }
-    /* تقييم */
+    .image-preview-item button { position: absolute; top: -6px; left: -6px; background: #c62828; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; }
+    .listing-images { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.75rem; }
+    .listing-images img { width: 70px; height: 70px; object-fit: cover; border-radius: 6px; cursor: pointer; }
+
+    /* تقييم النجوم */
     .stars-section { background: #fffbf0; border: 1.5px solid #f0d080; border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+    .stars-section h3 { color: #0F2744; margin-bottom: 0.5rem; font-size: 1rem; }
+    .stars-section p { color: #666; font-size: 0.82rem; margin-bottom: 1rem; }
     .stars { display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1rem; }
     .star { font-size: 2.5rem; cursor: pointer; color: #ddd; transition: color 0.15s, transform 0.1s; user-select: none; }
     .star:hover, .star.active { color: #f5a623; transform: scale(1.15); }
     .star-label { font-size: 0.85rem; color: #888; margin-bottom: 1rem; min-height: 1.2em; }
     .rating-comment { width: 100%; padding: 0.65rem; border: 1.5px solid #ddd; border-radius: 8px; font-size: 0.9rem; font-family: inherit; direction: rtl; resize: none; }
+    .rating-comment:focus { outline: none; border-color: #0F2744; }
     .btn-rate { background: #f5a623; color: white; border: none; border-radius: 8px; padding: 0.7rem 2rem; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 0.75rem; }
     .btn-rate:disabled { background: #ccc; cursor: not-allowed; }
-    .rating-item { background: #fafafa; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem; }
+    .ratings-list { margin-top: 1rem; }
+    .rating-item { background: white; border-radius: 8px; padding: 0.75rem; margin-bottom: 0.5rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
     .rating-stars { color: #f5a623; font-size: 1rem; margin-bottom: 0.25rem; }
+    .rating-comment-text { font-size: 0.82rem; color: #555; }
     .rating-date { font-size: 0.75rem; color: #aaa; margin-top: 0.2rem; }
-    /* حقل مخفي */
-    .hidden-field { display: none; }
+
     footer { text-align: center; padding: 2rem; color: #888; font-size: 0.82rem; }
   </style>
 </head>
 <body>
-
 <header>
   <h1>عقار<span>Match</span></h1>
   <nav>
-    <button class="active" onclick="showPage('home',this)">الرئيسية</button>
-    <button onclick="showPage('seller',this)">أنشر عقاراً</button>
-    <button onclick="showPage('buyer',this)">ابحث عن عقار</button>
-    <button onclick="showPage('rate',this)">⭐ تقييم</button>
+    <button class="active" onclick="showPage('home', this)">الرئيسية</button>
+    <button onclick="showPage('seller', this)">أنشر عقاراً</button>
+    <button onclick="showPage('buyer', this)">ابحث عن عقار</button>
+    <button onclick="showPage('rate', this)">⭐ تقييم</button>
   </nav>
 </header>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
-  <img id="lightbox-img" src="">
-  <div class="lightbox-nav">
-    <button onclick="lbNav(-1);event.stopPropagation()">‹ السابقة</button>
-    <button onclick="lbNav(1);event.stopPropagation()">التالية ›</button>
-  </div>
-</div>
 
 <!-- HOME -->
 <div class="page active" id="page-home">
@@ -127,14 +108,15 @@
     </div>
     <div class="card">
       <h2>🏠 عقارMatch — الوكيل الرقمي المحايد</h2>
-      <p style="color:#555;line-height:1.7;margin-bottom:1rem">المنصة الذكية التي تجمع البائع والمشتري سراً، ولا تكشف بيانات أي طرف إلا عند تطابق حقيقي.</p>
+      <p style="color:#555;line-height:1.7;margin-bottom:1rem">المنصة الذكية التي تجمع البائع والمشتري سراً، ولا تكشف بيانات أي طرف للآخر إلا عند وجود تطابق حقيقي.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
         <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">🔒</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">سعر تفاوض سري</div><div style="font-size:0.8rem;color:#666">النظام يتفاوض بدلاً عنك</div></div>
-        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">📷</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">صور العقار</div><div style="font-size:0.8rem;color:#666">اعرض عقارك بالصور</div></div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">📱</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">واتساب تلقائي</div><div style="font-size:0.8rem;color:#666">إشعار فوري عند التطابق</div></div>
         <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">👥</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">خصوصية متبادلة</div><div style="font-size:0.8rem;color:#666">لا أحد يرى بيانات الآخر</div></div>
         <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">📍</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">توفيق بالحي</div><div style="font-size:0.8rem;color:#666">مطابقة دقيقة حتى الحي</div></div>
       </div>
     </div>
+    <!-- التقييمات على الرئيسية -->
     <div class="card">
       <h2>⭐ آراء المستخدمين</h2>
       <div id="home-ratings"><div class="loading">جاري التحميل...</div></div>
@@ -158,7 +140,7 @@
       </div>
       <div class="form-group">
         <label>نوع العقار</label>
-        <select id="property_type" onchange="onPropertyTypeChange()">
+        <select id="property_type">
           <option value="">اختر نوع العقار</option>
           <option value="شقة">🏢 شقة</option>
           <option value="فيلا">🏰 فيلا</option>
@@ -187,35 +169,6 @@
         </div>
         <div class="neighborhoods-tags" id="neighborhoods-tags"></div>
       </div>
-      <!-- مساحة وغرف وواجهات -->
-      <div class="row3">
-        <div class="form-group">
-          <label>المساحة (م²)</label>
-          <input type="number" id="area" placeholder="مثال: 120">
-        </div>
-        <div class="form-group hidden-field" id="rooms-group">
-          <label>عدد الغرف</label>
-          <select id="rooms">
-            <option value="">اختر</option>
-            <option value="1">1 غرفة</option>
-            <option value="2">2 غرف</option>
-            <option value="3">3 غرف</option>
-            <option value="4">4 غرف</option>
-            <option value="5">5 غرف</option>
-            <option value="6+">6+ غرف</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>عدد الواجهات</label>
-          <select id="facades">
-            <option value="">اختر</option>
-            <option value="1">واجهة 1</option>
-            <option value="2">واجهتان 2</option>
-            <option value="3">3 واجهات</option>
-            <option value="4">4 واجهات</option>
-          </select>
-        </div>
-      </div>
       <div class="row">
         <div class="form-group">
           <label>السعر المعلن (دج)</label>
@@ -231,6 +184,7 @@
         <input type="number" id="floor_price" placeholder="مثال: 12000000">
         <div class="secret-note">🛡️ هذا الرقم سري تماماً ولا يُشارك مع أحد</div>
       </div>
+      <!-- صور العقار -->
       <div class="form-group">
         <label>📸 صور العقار (اختياري — حتى 5 صور)</label>
         <div class="image-upload-area" onclick="document.getElementById('photo-input').click()">
@@ -251,7 +205,7 @@
     <div class="card" style="padding:1rem 1.5rem">
       <h2>🔍 تصفية العقارات</h2>
       <div class="row">
-        <div class="form-group" style="margin-bottom:0.75rem">
+        <div class="form-group" style="margin-bottom:0">
           <label>نوع الصفقة</label>
           <select id="filter-deal" onchange="loadListings()">
             <option value="">الكل</option>
@@ -259,7 +213,7 @@
             <option value="إيجار">إيجار</option>
           </select>
         </div>
-        <div class="form-group" style="margin-bottom:0.75rem">
+        <div class="form-group" style="margin-bottom:0">
           <label>نوع العقار</label>
           <select id="filter-type" onchange="loadListings()">
             <option value="">الكل</option>
@@ -273,7 +227,7 @@
           </select>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:0">
+      <div class="form-group" style="margin-top:0.75rem;margin-bottom:0">
         <label>الولاية</label>
         <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
       </div>
@@ -286,8 +240,8 @@
 <div class="page" id="page-rate">
   <div class="container">
     <div class="stars-section card">
-      <h3 style="color:#0F2744;margin-bottom:0.5rem;font-size:1rem">كيف تقيّم منصة عقارMatch؟</h3>
-      <p style="color:#666;font-size:0.82rem;margin-bottom:1rem">رأيك يساعدنا على التحسين المستمر</p>
+      <h3>كيف تقيّم منصة عقارMatch؟</h3>
+      <p>رأيك يساعدنا على التحسين المستمر</p>
       <div class="stars" id="stars-input">
         <span class="star" onclick="setRating(1)" onmouseover="hoverRating(1)" onmouseout="unhoverRating()">★</span>
         <span class="star" onclick="setRating(2)" onmouseover="hoverRating(2)" onmouseout="unhoverRating()">★</span>
@@ -315,7 +269,6 @@ const API = 'https://aqarmatch.onrender.com';
 let neighborhoods = [];
 let selectedImages = [];
 let currentRating = 0;
-let lbImages = [], lbIndex = 0;
 
 // ─── التنقل ───────────────────────────────────────────────
 function showPage(name, btn) {
@@ -333,18 +286,6 @@ function setDealType(type) {
   document.getElementById('deal_type').value = type;
   document.getElementById('btn-sale').classList.toggle('active', type === 'بيع');
   document.getElementById('btn-rent').classList.toggle('active', type === 'إيجار');
-}
-
-// ─── إظهار/إخفاء حقل الغرف حسب نوع العقار ───────────────
-function onPropertyTypeChange() {
-  const type = document.getElementById('property_type').value;
-  const roomsGroup = document.getElementById('rooms-group');
-  if (type === 'شقة') {
-    roomsGroup.classList.remove('hidden-field');
-  } else {
-    roomsGroup.classList.add('hidden-field');
-    document.getElementById('rooms').value = '';
-  }
 }
 
 // ─── الأحياء ──────────────────────────────────────────────
@@ -370,9 +311,13 @@ function renderNeighborhoods() {
 function handleImages(e) {
   const files = Array.from(e.target.files);
   const remaining = 5 - selectedImages.length;
-  files.slice(0, remaining).forEach(file => {
+  const toAdd = files.slice(0, remaining);
+  toAdd.forEach(file => {
     const reader = new FileReader();
-    reader.onload = ev => { selectedImages.push({ file, dataUrl: ev.target.result }); renderPreviews(); };
+    reader.onload = ev => {
+      selectedImages.push({ file, dataUrl: ev.target.result });
+      renderPreviews();
+    };
     reader.readAsDataURL(file);
   });
 }
@@ -381,20 +326,6 @@ function renderPreviews() {
   document.getElementById('image-previews').innerHTML = selectedImages.map((img, i) =>
     `<div class="image-preview-item"><img src="${img.dataUrl}"><button onclick="removeImage(${i})">×</button></div>`
   ).join('');
-}
-
-// ─── Lightbox ─────────────────────────────────────────────
-function openLightbox(imgs, index) {
-  lbImages = imgs; lbIndex = index;
-  document.getElementById('lightbox-img').src = lbImages[lbIndex];
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox(e) {
-  if (!e || e.target === document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open');
-}
-function lbNav(dir) {
-  lbIndex = (lbIndex + dir + lbImages.length) % lbImages.length;
-  document.getElementById('lightbox-img').src = lbImages[lbIndex];
 }
 
 // ─── النشر ────────────────────────────────────────────────
@@ -407,9 +338,6 @@ async function submitListing() {
   const asking_price = parseFloat(document.getElementById('asking_price').value);
   const floor_price = parseFloat(document.getElementById('floor_price').value);
   const user_phone = document.getElementById('user_phone').value.trim();
-  const area = document.getElementById('area').value.trim();
-  const rooms = document.getElementById('rooms').value;
-  const facades = document.getElementById('facades').value;
   const alertDiv = document.getElementById('seller-alert');
 
   if (!property_type || !wilaya || !municipality || !neighborhoods.length || !asking_price || !floor_price || !user_phone) {
@@ -421,21 +349,19 @@ async function submitListing() {
 
   btn.disabled = true; btn.textContent = 'جاري النشر...';
   try {
+    // تحويل الصور إلى base64
     const images = selectedImages.map(img => img.dataUrl);
     const res = await fetch(`${API}/api/listings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deal_type, property_type, wilaya, municipality, neighborhoods, asking_price, floor_price, user_phone, area, rooms, facades, images })
+      body: JSON.stringify({ deal_type, property_type, wilaya, municipality, neighborhoods, asking_price, floor_price, user_phone, images })
     });
     const data = await res.json();
     if (res.ok) {
-      alertDiv.innerHTML = '<div class="alert alert-success">✅ تم نشر عقارك بنجاح! سيتم إشعارك عند وجود مشترٍ مهتم.</div>';
+      alertDiv.innerHTML = '<div class="alert alert-success">✅ تم نشر عقارك بنجاح! سيتم إشعارك عبر واتساب عند وجود مشترٍ مهتم.</div>';
       neighborhoods = []; selectedImages = []; renderNeighborhoods(); renderPreviews();
-      ['wilaya','municipality','asking_price','floor_price','user_phone','area'].forEach(id => document.getElementById(id).value = '');
+      ['wilaya','municipality','asking_price','floor_price','user_phone'].forEach(id => document.getElementById(id).value = '');
       document.getElementById('property_type').value = '';
-      document.getElementById('rooms').value = '';
-      document.getElementById('facades').value = '';
-      document.getElementById('rooms-group').classList.add('hidden-field');
     } else {
       alertDiv.innerHTML = `<div class="alert alert-error">${data.error || 'حدث خطأ'}</div>`;
     }
@@ -462,46 +388,30 @@ async function loadListings() {
     if (!listings.length) {
       container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات متاحة حالياً</div>'; return;
     }
-    container.innerHTML = listings.map(l => {
-      const imgs = l.images && l.images.length ? l.images : [];
-      const imgsJson = JSON.stringify(imgs).replace(/"/g, '&quot;');
-      let imgHtml = '';
-      if (imgs.length === 0) {
-        imgHtml = `<div class="listing-card-images"><div class="no-img">🏠</div></div>`;
-      } else if (imgs.length === 1) {
-        imgHtml = `<div class="listing-card-images"><img src="${imgs[0]}" onclick='openLightbox(${imgsJson},0)'></div>`;
-      } else {
-        const shown = imgs.slice(0, 3);
-        imgHtml = `<div class="listing-card-images"><div class="img-gallery">${shown.map((img,i) => `<img src="${img}" onclick='openLightbox(${imgsJson},${i})'>`).join('')}</div>${imgs.length > 3 ? `<div class="img-count">+${imgs.length-3} صور</div>` : ''}</div>`;
-      }
-      const details = [
-        l.area ? `📐 ${l.area} م²` : '',
-        l.rooms ? `🛏 ${l.rooms} غرف` : '',
-        l.facades ? `🧱 ${l.facades} واجهات` : '',
-      ].filter(Boolean);
-      return `
-        <div class="listing-card">
-          ${imgHtml}
-          <div class="listing-card-body">
-            <h3>${l.deal_type}${l.property_type ? ' — ' + l.property_type : ''} — ${l.wilaya}، ${l.municipality}</h3>
-            <div class="listing-meta">
-              ${(l.neighborhoods||[]).map(n => `<span class="tag">📍 ${n}</span>`).join('')}
-              ${details.map(d => `<span class="tag">${d}</span>`).join('')}
-              <span class="tag">⏰ ${l.days_remaining} يوم</span>
-            </div>
-            <span class="price-badge">${l.asking_price.toLocaleString()} دج</span>
-            <div class="match-form">
-              <input type="number" placeholder="ميزانيتك (دج)" id="budget-${l.id}">
-              <input type="tel" placeholder="واتساب" id="phone-${l.id}">
-              <button onclick="checkMatch(${l.id})">فحص التطابق</button>
-            </div>
-            <div id="match-result-${l.id}"></div>
-          </div>
-        </div>`;
-    }).join('');
+    container.innerHTML = listings.map(l => `
+      <div class="listing-card">
+        ${l.images && l.images.length ? `<div class="listing-images">${l.images.map(img => `<img src="${img}" onclick="openImg('${img}')">`).join('')}</div>` : ''}
+        <h3>${l.deal_type} ${l.property_type ? '— ' + l.property_type : ''} — ${l.wilaya}، ${l.municipality}</h3>
+        <div class="listing-meta">
+          ${(l.neighborhoods||[]).map(n => `<span class="tag">📍 ${n}</span>`).join('')}
+          <span class="tag">⏰ ${l.days_remaining} يوم</span>
+        </div>
+        <span class="price-badge">${l.asking_price.toLocaleString()} دج</span>
+        <div class="match-form">
+          <input type="number" placeholder="ميزانيتك (دج)" id="budget-${l.id}">
+          <input type="tel" placeholder="واتساب" id="phone-${l.id}">
+          <button onclick="checkMatch(${l.id})">فحص التطابق</button>
+        </div>
+        <div id="match-result-${l.id}"></div>
+      </div>
+    `).join('');
   } catch(e) {
     container.innerHTML = '<div class="card" style="text-align:center;color:#c62828">تعذر تحميل العقارات</div>';
   }
+}
+
+function openImg(src) {
+  const w = window.open(''); w.document.write(`<img src="${src}" style="max-width:100%;max-height:100vh">`);
 }
 
 async function checkMatch(id) {
@@ -517,6 +427,7 @@ async function checkMatch(id) {
   } catch(e) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">تعذر الاتصال بالخادم</div>'; }
 }
 
+// ─── الإحصائيات ───────────────────────────────────────────
 async function loadStats() {
   try {
     const res = await fetch(`${API}/api/listings/stats`);
@@ -528,26 +439,30 @@ async function loadStats() {
 }
 
 // ─── التقييمات ────────────────────────────────────────────
-const starLabels = ['','سيء جداً','سيء','مقبول','جيد','ممتاز! 🎉'];
-let ratings = [];
-try { ratings = JSON.parse(localStorage.getItem('aqar_ratings') || '[]'); } catch(e) {}
+const starLabels = ['', 'سيء جداً', 'سيء', 'مقبول', 'جيد', 'ممتاز! 🎉'];
+let ratings = JSON.parse(localStorage.getItem('aqar_ratings') || '[]');
 
 function hoverRating(n) {
-  document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('active', i < n));
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < n));
   document.getElementById('star-label').textContent = starLabels[n];
 }
 function unhoverRating() {
-  document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('active', i < currentRating));
+  document.querySelectorAll('.star').forEach((s, i) => s.classList.toggle('active', i < currentRating));
   document.getElementById('star-label').textContent = currentRating ? starLabels[currentRating] : 'اختر تقييمك';
 }
-function setRating(n) { currentRating = n; document.getElementById('rate-btn').disabled = false; unhoverRating(); }
+function setRating(n) {
+  currentRating = n;
+  document.getElementById('rate-btn').disabled = false;
+  unhoverRating();
+}
 
 function submitRating() {
   if (!currentRating) return;
   const comment = document.getElementById('rating-comment').value.trim();
-  ratings.unshift({ stars: currentRating, comment, date: new Date().toLocaleDateString('ar-DZ') });
+  const rating = { stars: currentRating, comment, date: new Date().toLocaleDateString('ar-DZ') };
+  ratings.unshift(rating);
   if (ratings.length > 50) ratings = ratings.slice(0, 50);
-  try { localStorage.setItem('aqar_ratings', JSON.stringify(ratings)); } catch(e) {}
+  localStorage.setItem('aqar_ratings', JSON.stringify(ratings));
   document.getElementById('rate-alert').innerHTML = '<div class="alert alert-success">✅ شكراً على تقييمك!</div>';
   document.getElementById('rating-comment').value = '';
   currentRating = 0;
@@ -559,16 +474,28 @@ function submitRating() {
 
 function renderRatingsList(containerId) {
   const el = document.getElementById(containerId);
-  if (!el) return;
-  if (!ratings.length) { el.innerHTML = '<div style="text-align:center;color:#888;padding:1rem">لا توجد تقييمات بعد</div>'; return; }
-  const avg = (ratings.reduce((s,r) => s + r.stars, 0) / ratings.length).toFixed(1);
-  el.innerHTML = `<div style="text-align:center;margin-bottom:1rem"><div style="font-size:2rem;font-weight:700;color:#0F2744">${avg}</div><div style="color:#f5a623;font-size:1.2rem">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</div><div style="font-size:0.8rem;color:#888">${ratings.length} تقييم</div></div>`
-  + ratings.slice(0,10).map(r => `<div class="rating-item"><div class="rating-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>${r.comment ? `<div style="font-size:0.82rem;color:#555">${r.comment}</div>` : ''}<div class="rating-date">${r.date}</div></div>`).join('');
+  if (!ratings.length) { el.innerHTML = '<div style="text-align:center;color:#888;padding:1rem">لا توجد تقييمات بعد — كن أول من يقيّم!</div>'; return; }
+  const avg = (ratings.reduce((s, r) => s + r.stars, 0) / ratings.length).toFixed(1);
+  el.innerHTML = `
+    <div style="text-align:center;margin-bottom:1rem">
+      <div style="font-size:2rem;font-weight:700;color:#0F2744">${avg}</div>
+      <div style="color:#f5a623;font-size:1.2rem">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</div>
+      <div style="font-size:0.8rem;color:#888">${ratings.length} تقييم</div>
+    </div>
+    ${ratings.slice(0, 10).map(r => `
+      <div class="rating-item">
+        <div class="rating-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+        ${r.comment ? `<div class="rating-comment-text">${r.comment}</div>` : ''}
+        <div class="rating-date">${r.date}</div>
+      </div>
+    `).join('')}
+  `;
 }
 
 function loadRatings() { renderRatingsList('ratings-list'); }
 function loadHomeRatings() { renderRatingsList('home-ratings'); }
 
+// تشغيل أولي
 loadStats();
 loadHomeRatings();
 </script>
