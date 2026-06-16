@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عقارMatch — المنصة الذكية للعقارات</title>
+  <title>Ø¹Ù‚Ø§Ø±Match â€” Ø§Ù„Ù…Ù†ØµØ© Ø§Ù„Ø°ÙƒÙŠØ© Ù„Ù„Ø¹Ù‚Ø§Ø±Ø§Øª</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', Tahoma, Arial, sans-serif; background: #f5f5f0; color: #1a1a2e; direction: rtl; }
@@ -92,21 +92,21 @@
 </head>
 <body>
 <header>
-  <h1>عقار<span>Match</span></h1>
+  <h1>Ø¹Ù‚Ø§Ø±<span>Match</span></h1>
   <nav>
-    <button class="active" onclick="showPage('home',this)">الرئيسية</button>
-    <button onclick="showPage('seller',this)">أنشر عقاراً</button>
-    <button onclick="showPage('buyer',this)">ابحث عن عقار</button>
-    <button onclick="showPage('rate',this)">⭐ تقييم</button>
+    <button class="active" onclick="showPage('home',this)">Ø§Ù„Ø±Ø¦ÙŠØ³ÙŠØ©</button>
+    <button onclick="showPage('seller',this)">Ø£Ù†Ø´Ø± Ø¹Ù‚Ø§Ø±Ø§Ù‹</button>
+    <button onclick="showPage('buyer',this)">Ø§Ø¨Ø­Ø« Ø¹Ù† Ø¹Ù‚Ø§Ø±</button>
+    <button onclick="showPage('rate',this)">â­ ØªÙ‚ÙŠÙŠÙ…</button>
   </nav>
 </header>
  
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-close" onclick="closeLightbox()">âœ•</button>
   <img id="lightbox-img" src="">
   <div class="lightbox-nav">
-    <button onclick="lbNav(-1);event.stopPropagation()">‹ السابقة</button>
-    <button onclick="lbNav(1);event.stopPropagation()">التالية ›</button>
+    <button onclick="lbNav(-1);event.stopPropagation()">â€¹ Ø§Ù„Ø³Ø§Ø¨Ù‚Ø©</button>
+    <button onclick="lbNav(1);event.stopPropagation()">Ø§Ù„ØªØ§Ù„ÙŠØ© â€º</button>
   </div>
 </div>
  
@@ -114,23 +114,23 @@
 <div class="page active" id="page-home">
   <div class="container">
     <div class="stat-grid">
-      <div class="stat-box"><div class="stat-num" id="stat-total">—</div><div class="stat-label">عقار نشط</div></div>
-      <div class="stat-box"><div class="stat-num" id="stat-sale">—</div><div class="stat-label">للبيع</div></div>
-      <div class="stat-box"><div class="stat-num" id="stat-rent">—</div><div class="stat-label">للإيجار</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-total">â€”</div><div class="stat-label">Ø¹Ù‚Ø§Ø± Ù†Ø´Ø·</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-sale">â€”</div><div class="stat-label">Ù„Ù„Ø¨ÙŠØ¹</div></div>
+      <div class="stat-box"><div class="stat-num" id="stat-rent">â€”</div><div class="stat-label">Ù„Ù„Ø¥ÙŠØ¬Ø§Ø±</div></div>
     </div>
     <div class="card">
-      <h2>🏠 عقارMatch — الوكيل الرقمي المحايد</h2>
-      <p style="color:#555;line-height:1.7;margin-bottom:1rem">المنصة الذكية التي تجمع البائع والمشتري سراً، ولا تكشف بيانات أي طرف إلا عند تطابق حقيقي.</p>
+      <h2>ðŸ  Ø¹Ù‚Ø§Ø±Match â€” Ø§Ù„ÙˆÙƒÙŠÙ„ Ø§Ù„Ø±Ù‚Ù…ÙŠ Ø§Ù„Ù…Ø­Ø§ÙŠØ¯</h2>
+      <p style="color:#555;line-height:1.7;margin-bottom:1rem">Ø§Ù„Ù…Ù†ØµØ© Ø§Ù„Ø°ÙƒÙŠØ© Ø§Ù„ØªÙŠ ØªØ¬Ù…Ø¹ Ø§Ù„Ø¨Ø§Ø¦Ø¹ ÙˆØ§Ù„Ù…Ø´ØªØ±ÙŠ Ø³Ø±Ø§Ù‹ØŒ ÙˆÙ„Ø§ ØªÙƒØ´Ù Ø¨ÙŠØ§Ù†Ø§Øª Ø£ÙŠ Ø·Ø±Ù Ø¥Ù„Ø§ Ø¹Ù†Ø¯ ØªØ·Ø§Ø¨Ù‚ Ø­Ù‚ÙŠÙ‚ÙŠ.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">🔒</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">سعر تفاوض سري</div><div style="font-size:0.8rem;color:#666">النظام يتفاوض بدلاً عنك</div></div>
-        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">📷</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">صور العقار</div><div style="font-size:0.8rem;color:#666">اعرض عقارك بالصور</div></div>
-        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">👥</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">خصوصية متبادلة</div><div style="font-size:0.8rem;color:#666">لا أحد يرى بيانات الآخر</div></div>
-        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">📍</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">توفيق بالحي</div><div style="font-size:0.8rem;color:#666">مطابقة دقيقة حتى الحي</div></div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">ðŸ”’</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">Ø³Ø¹Ø± ØªÙØ§ÙˆØ¶ Ø³Ø±ÙŠ</div><div style="font-size:0.8rem;color:#666">Ø§Ù„Ù†Ø¸Ø§Ù… ÙŠØªÙØ§ÙˆØ¶ Ø¨Ø¯Ù„Ø§Ù‹ Ø¹Ù†Ùƒ</div></div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">ðŸ“·</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">ØµÙˆØ± Ø§Ù„Ø¹Ù‚Ø§Ø±</div><div style="font-size:0.8rem;color:#666">Ø§Ø¹Ø±Ø¶ Ø¹Ù‚Ø§Ø±Ùƒ Ø¨Ø§Ù„ØµÙˆØ±</div></div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">ðŸ‘¥</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">Ø®ØµÙˆØµÙŠØ© Ù…ØªØ¨Ø§Ø¯Ù„Ø©</div><div style="font-size:0.8rem;color:#666">Ù„Ø§ Ø£Ø­Ø¯ ÙŠØ±Ù‰ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¢Ø®Ø±</div></div>
+        <div style="background:#f8f9ff;padding:1rem;border-radius:8px"><div style="font-size:1.3rem;margin-bottom:0.4rem">ðŸ“</div><div style="font-weight:600;margin-bottom:0.3rem;font-size:0.9rem">ØªÙˆÙÙŠÙ‚ Ø¨Ø§Ù„Ø­ÙŠ</div><div style="font-size:0.8rem;color:#666">Ù…Ø·Ø§Ø¨Ù‚Ø© Ø¯Ù‚ÙŠÙ‚Ø© Ø­ØªÙ‰ Ø§Ù„Ø­ÙŠ</div></div>
       </div>
     </div>
     <div class="card">
-      <h2>⭐ آراء المستخدمين</h2>
-      <div id="home-ratings"><div class="loading">جاري التحميل...</div></div>
+      <h2>â­ Ø¢Ø±Ø§Ø¡ Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙŠÙ†</h2>
+      <div id="home-ratings"><div class="loading">Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...</div></div>
     </div>
   </div>
 </div>
@@ -139,140 +139,140 @@
 <div class="page" id="page-seller">
   <div class="container">
     <div class="card">
-      <h2>📋 نشر عقار جديد</h2>
+      <h2>ðŸ“‹ Ù†Ø´Ø± Ø¹Ù‚Ø§Ø± Ø¬Ø¯ÙŠØ¯</h2>
       <div id="seller-alert"></div>
       <div class="form-group">
-        <label>نوع الصفقة</label>
+        <label>Ù†ÙˆØ¹ Ø§Ù„ØµÙÙ‚Ø©</label>
         <div class="segment">
-          <button class="active" id="btn-sale" onclick="setDealType('بيع')">بيع</button>
-          <button id="btn-rent" onclick="setDealType('إيجار')">إيجار</button>
+          <button class="active" id="btn-sale" onclick="setDealType('Ø¨ÙŠØ¹')">Ø¨ÙŠØ¹</button>
+          <button id="btn-rent" onclick="setDealType('Ø¥ÙŠØ¬Ø§Ø±')">Ø¥ÙŠØ¬Ø§Ø±</button>
         </div>
-        <input type="hidden" id="deal_type" value="بيع">
+        <input type="hidden" id="deal_type" value="Ø¨ÙŠØ¹">
       </div>
       <div class="form-group">
-        <label>نوع العقار</label>
+        <label>Ù†ÙˆØ¹ Ø§Ù„Ø¹Ù‚Ø§Ø±</label>
         <select id="property_type" onchange="onPropertyTypeChange()">
-          <option value="">اختر نوع العقار</option>
-          <option value="شقة">🏢 شقة</option>
-          <option value="فيلا">🏰 فيلا</option>
-          <option value="منزل فردي">🏠 منزل فردي</option>
-          <option value="تجاري">🏪 تجاري</option>
-          <option value="أرض فلاحية">🌾 أرض فلاحية</option>
-          <option value="أرض صالحة للبناء">🏗️ أرض صالحة للبناء</option>
-          <option value="أخرى">📦 أخرى</option>
+          <option value="">Ø§Ø®ØªØ± Ù†ÙˆØ¹ Ø§Ù„Ø¹Ù‚Ø§Ø±</option>
+          <option value="Ø´Ù‚Ø©">ðŸ¢ Ø´Ù‚Ø©</option>
+          <option value="ÙÙŠÙ„Ø§">ðŸ° ÙÙŠÙ„Ø§</option>
+          <option value="Ù…Ù†Ø²Ù„ ÙØ±Ø¯ÙŠ">ðŸ  Ù…Ù†Ø²Ù„ ÙØ±Ø¯ÙŠ</option>
+          <option value="ØªØ¬Ø§Ø±ÙŠ">ðŸª ØªØ¬Ø§Ø±ÙŠ</option>
+          <option value="Ø£Ø±Ø¶ ÙÙ„Ø§Ø­ÙŠØ©">ðŸŒ¾ Ø£Ø±Ø¶ ÙÙ„Ø§Ø­ÙŠØ©</option>
+          <option value="Ø£Ø±Ø¶ ØµØ§Ù„Ø­Ø© Ù„Ù„Ø¨Ù†Ø§Ø¡">ðŸ—ï¸ Ø£Ø±Ø¶ ØµØ§Ù„Ø­Ø© Ù„Ù„Ø¨Ù†Ø§Ø¡</option>
+          <option value="Ø£Ø®Ø±Ù‰">ðŸ“¦ Ø£Ø®Ø±Ù‰</option>
         </select>
       </div>
       <div class="row">
         <div class="form-group">
-          <label>الولاية</label>
-          <input type="text" id="wilaya" placeholder="مثال: البليدة">
+          <label>Ø§Ù„ÙˆÙ„Ø§ÙŠØ©</label>
+          <input type="text" id="wilaya" placeholder="Ù…Ø«Ø§Ù„: Ø§Ù„Ø¨Ù„ÙŠØ¯Ø©">
         </div>
         <div class="form-group">
-          <label>البلدية</label>
-          <input type="text" id="municipality" placeholder="مثال: بوفاريك">
+          <label>Ø§Ù„Ø¨Ù„Ø¯ÙŠØ©</label>
+          <input type="text" id="municipality" placeholder="Ù…Ø«Ø§Ù„: Ø¨ÙˆÙØ§Ø±ÙŠÙƒ">
         </div>
       </div>
       <div class="form-group">
-        <label>الأحياء</label>
+        <label>Ø§Ù„Ø£Ø­ÙŠØ§Ø¡</label>
         <div style="display:flex;gap:0.5rem">
-          <input type="text" id="neighborhood-input" placeholder="اكتب اسم الحي ثم اضغط إضافة">
-          <button onclick="addNeighborhood()" style="padding:0.65rem 1rem;background:#0F2744;color:white;border:none;border-radius:8px;cursor:pointer;white-space:nowrap">إضافة</button>
+          <input type="text" id="neighborhood-input" placeholder="Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„Ø­ÙŠ Ø«Ù… Ø§Ø¶ØºØ· Ø¥Ø¶Ø§ÙØ©">
+          <button onclick="addNeighborhood()" style="padding:0.65rem 1rem;background:#0F2744;color:white;border:none;border-radius:8px;cursor:pointer;white-space:nowrap">Ø¥Ø¶Ø§ÙØ©</button>
         </div>
         <div class="neighborhoods-tags" id="neighborhoods-tags"></div>
       </div>
  
-      <!-- الصف الأول: مساحة + واجهات -->
+      <!-- Ø§Ù„ØµÙ Ø§Ù„Ø£ÙˆÙ„: Ù…Ø³Ø§Ø­Ø© + ÙˆØ§Ø¬Ù‡Ø§Øª -->
       <div class="row">
         <div class="form-group">
-          <label>المساحة (م²)</label>
-          <input type="number" id="area" placeholder="مثال: 120">
+          <label>Ø§Ù„Ù…Ø³Ø§Ø­Ø© (Ù…Â²)</label>
+          <input type="number" id="area" placeholder="Ù…Ø«Ø§Ù„: 120">
         </div>
         <div class="form-group">
-          <label>عدد الواجهات</label>
+          <label>Ø¹Ø¯Ø¯ Ø§Ù„ÙˆØ§Ø¬Ù‡Ø§Øª</label>
           <select id="facades">
-            <option value="">اختر</option>
-            <option value="1">واجهة 1</option>
-            <option value="2">واجهتان 2</option>
-            <option value="3">3 واجهات</option>
-            <option value="4">4 واجهات</option>
+            <option value="">Ø§Ø®ØªØ±</option>
+            <option value="1">ÙˆØ§Ø¬Ù‡Ø© 1</option>
+            <option value="2">ÙˆØ§Ø¬Ù‡ØªØ§Ù† 2</option>
+            <option value="3">3 ÙˆØ§Ø¬Ù‡Ø§Øª</option>
+            <option value="4">4 ÙˆØ§Ø¬Ù‡Ø§Øª</option>
           </select>
         </div>
       </div>
  
-      <!-- الصف الثاني: غرف (شقة فقط) + طوابق -->
+      <!-- Ø§Ù„ØµÙ Ø§Ù„Ø«Ø§Ù†ÙŠ: ØºØ±Ù (Ø´Ù‚Ø© ÙÙ‚Ø·) + Ø·ÙˆØ§Ø¨Ù‚ -->
       <div class="row">
         <div class="form-group hidden-field" id="rooms-group">
-          <label>عدد الغرف 🛏</label>
+          <label>Ø¹Ø¯Ø¯ Ø§Ù„ØºØ±Ù ðŸ›</label>
           <select id="rooms">
-            <option value="">اختر</option>
-            <option value="1">1 غرفة</option>
-            <option value="2">2 غرف</option>
-            <option value="3">3 غرف</option>
-            <option value="4">4 غرف</option>
-            <option value="5">5 غرف</option>
-            <option value="6+">6+ غرف</option>
+            <option value="">Ø§Ø®ØªØ±</option>
+            <option value="1">1 ØºØ±ÙØ©</option>
+            <option value="2">2 ØºØ±Ù</option>
+            <option value="3">3 ØºØ±Ù</option>
+            <option value="4">4 ØºØ±Ù</option>
+            <option value="5">5 ØºØ±Ù</option>
+            <option value="6+">6+ ØºØ±Ù</option>
           </select>
         </div>
         <div class="form-group hidden-field" id="floors-group">
-          <label>عدد الطوابق 🏗</label>
+          <label>Ø¹Ø¯Ø¯ Ø§Ù„Ø·ÙˆØ§Ø¨Ù‚ ðŸ—</label>
           <select id="floors">
-            <option value="">اختر</option>
-            <option value="1">طابق واحد</option>
-            <option value="2">طابقان</option>
-            <option value="3">3 طوابق</option>
-            <option value="4">4 طوابق</option>
-            <option value="5+">5+ طوابق</option>
+            <option value="">Ø§Ø®ØªØ±</option>
+            <option value="1">Ø·Ø§Ø¨Ù‚ ÙˆØ§Ø­Ø¯</option>
+            <option value="2">Ø·Ø§Ø¨Ù‚Ø§Ù†</option>
+            <option value="3">3 Ø·ÙˆØ§Ø¨Ù‚</option>
+            <option value="4">4 Ø·ÙˆØ§Ø¨Ù‚</option>
+            <option value="5+">5+ Ø·ÙˆØ§Ø¨Ù‚</option>
           </select>
         </div>
       </div>
  
-      <!-- الصف الثالث: حديقة (فيلا + منزل) + مسبح (فيلا فقط) -->
+      <!-- Ø§Ù„ØµÙ Ø§Ù„Ø«Ø§Ù„Ø«: Ø­Ø¯ÙŠÙ‚Ø© (ÙÙŠÙ„Ø§ + Ù…Ù†Ø²Ù„) + Ù…Ø³Ø¨Ø­ (ÙÙŠÙ„Ø§ ÙÙ‚Ø·) -->
       <div class="row">
         <div class="form-group hidden-field" id="garden-group">
-          <label>عدد الحدائق 🌿</label>
+          <label>Ø¹Ø¯Ø¯ Ø§Ù„Ø­Ø¯Ø§Ø¦Ù‚ ðŸŒ¿</label>
           <select id="garden">
-            <option value="">اختر</option>
-            <option value="1">حديقة واحدة</option>
-            <option value="2">حديقتان</option>
-            <option value="3">3 حدائق</option>
+            <option value="">Ø§Ø®ØªØ±</option>
+            <option value="1">Ø­Ø¯ÙŠÙ‚Ø© ÙˆØ§Ø­Ø¯Ø©</option>
+            <option value="2">Ø­Ø¯ÙŠÙ‚ØªØ§Ù†</option>
+            <option value="3">3 Ø­Ø¯Ø§Ø¦Ù‚</option>
           </select>
         </div>
         <div class="form-group hidden-field" id="pool-group">
-          <label>عدد المسابح 🏊</label>
+          <label>Ø¹Ø¯Ø¯ Ø§Ù„Ù…Ø³Ø§Ø¨Ø­ ðŸŠ</label>
           <select id="pool">
-            <option value="">اختر</option>
-            <option value="1">مسبح واحد</option>
-            <option value="2">مسبحان</option>
-            <option value="3">3 مسابح</option>
+            <option value="">Ø§Ø®ØªØ±</option>
+            <option value="1">Ù…Ø³Ø¨Ø­ ÙˆØ§Ø­Ø¯</option>
+            <option value="2">Ù…Ø³Ø¨Ø­Ø§Ù†</option>
+            <option value="3">3 Ù…Ø³Ø§Ø¨Ø­</option>
           </select>
         </div>
       </div>
  
       <div class="row">
         <div class="form-group">
-          <label>السعر المعلن (دج)</label>
-          <input type="number" id="asking_price" placeholder="مثال: 15000000">
+          <label>Ø§Ù„Ø³Ø¹Ø± Ø§Ù„Ù…Ø¹Ù„Ù† (Ø¯Ø¬)</label>
+          <input type="number" id="asking_price" placeholder="Ù…Ø«Ø§Ù„: 15000000">
         </div>
         <div class="form-group">
-          <label>رقم واتساب</label>
+          <label>Ø±Ù‚Ù… ÙˆØ§ØªØ³Ø§Ø¨</label>
           <input type="tel" id="user_phone" placeholder="0550000000">
         </div>
       </div>
       <div class="secret-field">
-        <label>🔒 أدنى سعر مقبول (سري)</label>
-        <input type="number" id="floor_price" placeholder="مثال: 12000000">
-        <div class="secret-note">🛡️ هذا الرقم سري تماماً ولا يُشارك مع أحد</div>
+        <label>ðŸ”’ Ø£Ø¯Ù†Ù‰ Ø³Ø¹Ø± Ù…Ù‚Ø¨ÙˆÙ„ (Ø³Ø±ÙŠ)</label>
+        <input type="number" id="floor_price" placeholder="Ù…Ø«Ø§Ù„: 12000000">
+        <div class="secret-note">ðŸ›¡ï¸ Ù‡Ø°Ø§ Ø§Ù„Ø±Ù‚Ù… Ø³Ø±ÙŠ ØªÙ…Ø§Ù…Ø§Ù‹ ÙˆÙ„Ø§ ÙŠÙØ´Ø§Ø±Ùƒ Ù…Ø¹ Ø£Ø­Ø¯</div>
       </div>
       <div class="form-group">
-        <label>📸 صور العقار (اختياري — حتى 5 صور)</label>
+        <label>ðŸ“¸ ØµÙˆØ± Ø§Ù„Ø¹Ù‚Ø§Ø± (Ø§Ø®ØªÙŠØ§Ø±ÙŠ â€” Ø­ØªÙ‰ 5 ØµÙˆØ±)</label>
         <div class="image-upload-area" onclick="document.getElementById('photo-input').click()">
-          <div style="font-size:2rem">📷</div>
-          <p>اضغط لإضافة صور من هاتفك أو جهازك</p>
+          <div style="font-size:2rem">ðŸ“·</div>
+          <p>Ø§Ø¶ØºØ· Ù„Ø¥Ø¶Ø§ÙØ© ØµÙˆØ± Ù…Ù† Ù‡Ø§ØªÙÙƒ Ø£Ùˆ Ø¬Ù‡Ø§Ø²Ùƒ</p>
           <input type="file" id="photo-input" accept="image/*" multiple onchange="handleImages(event)">
         </div>
         <div class="image-previews" id="image-previews"></div>
       </div>
-      <button class="btn" onclick="submitListing()" id="submit-btn">نشر العقار</button>
+      <button class="btn" onclick="submitListing()" id="submit-btn">Ù†Ø´Ø± Ø§Ù„Ø¹Ù‚Ø§Ø±</button>
     </div>
   </div>
 </div>
@@ -281,36 +281,36 @@
 <div class="page" id="page-buyer">
   <div class="container">
     <div class="card" style="padding:1rem 1.5rem">
-      <h2>🔍 تصفية العقارات</h2>
+      <h2>ðŸ” ØªØµÙÙŠØ© Ø§Ù„Ø¹Ù‚Ø§Ø±Ø§Øª</h2>
       <div class="row">
         <div class="form-group" style="margin-bottom:0.75rem">
-          <label>نوع الصفقة</label>
+          <label>Ù†ÙˆØ¹ Ø§Ù„ØµÙÙ‚Ø©</label>
           <select id="filter-deal" onchange="loadListings()">
-            <option value="">الكل</option>
-            <option value="بيع">بيع</option>
-            <option value="إيجار">إيجار</option>
+            <option value="">Ø§Ù„ÙƒÙ„</option>
+            <option value="Ø¨ÙŠØ¹">Ø¨ÙŠØ¹</option>
+            <option value="Ø¥ÙŠØ¬Ø§Ø±">Ø¥ÙŠØ¬Ø§Ø±</option>
           </select>
         </div>
         <div class="form-group" style="margin-bottom:0.75rem">
-          <label>نوع العقار</label>
+          <label>Ù†ÙˆØ¹ Ø§Ù„Ø¹Ù‚Ø§Ø±</label>
           <select id="filter-type" onchange="loadListings()">
-            <option value="">الكل</option>
-            <option value="شقة">شقة</option>
-            <option value="فيلا">فيلا</option>
-            <option value="منزل فردي">منزل فردي</option>
-            <option value="تجاري">تجاري</option>
-            <option value="أرض فلاحية">أرض فلاحية</option>
-            <option value="أرض صالحة للبناء">أرض صالحة للبناء</option>
-            <option value="أخرى">أخرى</option>
+            <option value="">Ø§Ù„ÙƒÙ„</option>
+            <option value="Ø´Ù‚Ø©">Ø´Ù‚Ø©</option>
+            <option value="ÙÙŠÙ„Ø§">ÙÙŠÙ„Ø§</option>
+            <option value="Ù…Ù†Ø²Ù„ ÙØ±Ø¯ÙŠ">Ù…Ù†Ø²Ù„ ÙØ±Ø¯ÙŠ</option>
+            <option value="ØªØ¬Ø§Ø±ÙŠ">ØªØ¬Ø§Ø±ÙŠ</option>
+            <option value="Ø£Ø±Ø¶ ÙÙ„Ø§Ø­ÙŠØ©">Ø£Ø±Ø¶ ÙÙ„Ø§Ø­ÙŠØ©</option>
+            <option value="Ø£Ø±Ø¶ ØµØ§Ù„Ø­Ø© Ù„Ù„Ø¨Ù†Ø§Ø¡">Ø£Ø±Ø¶ ØµØ§Ù„Ø­Ø© Ù„Ù„Ø¨Ù†Ø§Ø¡</option>
+            <option value="Ø£Ø®Ø±Ù‰">Ø£Ø®Ø±Ù‰</option>
           </select>
         </div>
       </div>
       <div class="form-group" style="margin-bottom:0">
-        <label>الولاية</label>
-        <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        <label>Ø§Ù„ÙˆÙ„Ø§ÙŠØ©</label>
+        <input type="text" id="filter-wilaya" placeholder="Ø¬Ù…ÙŠØ¹ Ø§Ù„ÙˆÙ„Ø§ÙŠØ§Øª" oninput="loadListings()">
       </div>
     </div>
-    <div id="listings-container"><div class="loading">جاري التحميل...</div></div>
+    <div id="listings-container"><div class="loading">Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...</div></div>
   </div>
 </div>
  
@@ -318,29 +318,29 @@
 <div class="page" id="page-rate">
   <div class="container">
     <div class="stars-section card">
-      <h3 style="color:#0F2744;margin-bottom:0.5rem;font-size:1rem">كيف تقيّم منصة عقارMatch؟</h3>
-      <p style="color:#666;font-size:0.82rem;margin-bottom:1rem">رأيك يساعدنا على التحسين المستمر</p>
+      <h3 style="color:#0F2744;margin-bottom:0.5rem;font-size:1rem">ÙƒÙŠÙ ØªÙ‚ÙŠÙ‘Ù… Ù…Ù†ØµØ© Ø¹Ù‚Ø§Ø±MatchØŸ</h3>
+      <p style="color:#666;font-size:0.82rem;margin-bottom:1rem">Ø±Ø£ÙŠÙƒ ÙŠØ³Ø§Ø¹Ø¯Ù†Ø§ Ø¹Ù„Ù‰ Ø§Ù„ØªØ­Ø³ÙŠÙ† Ø§Ù„Ù…Ø³ØªÙ…Ø±</p>
       <div class="stars" id="stars-input">
-        <span class="star" onclick="setRating(1)" onmouseover="hoverRating(1)" onmouseout="unhoverRating()">★</span>
-        <span class="star" onclick="setRating(2)" onmouseover="hoverRating(2)" onmouseout="unhoverRating()">★</span>
-        <span class="star" onclick="setRating(3)" onmouseover="hoverRating(3)" onmouseout="unhoverRating()">★</span>
-        <span class="star" onclick="setRating(4)" onmouseover="hoverRating(4)" onmouseout="unhoverRating()">★</span>
-        <span class="star" onclick="setRating(5)" onmouseover="hoverRating(5)" onmouseout="unhoverRating()">★</span>
+        <span class="star" onclick="setRating(1)" onmouseover="hoverRating(1)" onmouseout="unhoverRating()">â˜…</span>
+        <span class="star" onclick="setRating(2)" onmouseover="hoverRating(2)" onmouseout="unhoverRating()">â˜…</span>
+        <span class="star" onclick="setRating(3)" onmouseover="hoverRating(3)" onmouseout="unhoverRating()">â˜…</span>
+        <span class="star" onclick="setRating(4)" onmouseover="hoverRating(4)" onmouseout="unhoverRating()">â˜…</span>
+        <span class="star" onclick="setRating(5)" onmouseover="hoverRating(5)" onmouseout="unhoverRating()">â˜…</span>
       </div>
-      <div class="star-label" id="star-label">اختر تقييمك</div>
-      <textarea class="rating-comment" id="rating-comment" rows="3" placeholder="أضف تعليقاً (اختياري)..."></textarea>
+      <div class="star-label" id="star-label">Ø§Ø®ØªØ± ØªÙ‚ÙŠÙŠÙ…Ùƒ</div>
+      <textarea class="rating-comment" id="rating-comment" rows="3" placeholder="Ø£Ø¶Ù ØªØ¹Ù„ÙŠÙ‚Ø§Ù‹ (Ø§Ø®ØªÙŠØ§Ø±ÙŠ)..."></textarea>
       <br>
-      <button class="btn-rate" onclick="submitRating()" id="rate-btn" disabled>إرسال التقييم</button>
+      <button class="btn-rate" onclick="submitRating()" id="rate-btn" disabled>Ø¥Ø±Ø³Ø§Ù„ Ø§Ù„ØªÙ‚ÙŠÙŠÙ…</button>
       <div id="rate-alert" style="margin-top:0.75rem"></div>
     </div>
     <div class="card">
-      <h2>📊 تقييمات المستخدمين</h2>
-      <div id="ratings-list"><div class="loading">جاري التحميل...</div></div>
+      <h2>ðŸ“Š ØªÙ‚ÙŠÙŠÙ…Ø§Øª Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…ÙŠÙ†</h2>
+      <div id="ratings-list"><div class="loading">Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...</div></div>
     </div>
   </div>
 </div>
  
-<footer>عقارMatch © 2026 — المنصة الذكية للعقارات في الجزائر</footer>
+<footer>Ø¹Ù‚Ø§Ø±Match Â© 2026 â€” Ø§Ù„Ù…Ù†ØµØ© Ø§Ù„Ø°ÙƒÙŠØ© Ù„Ù„Ø¹Ù‚Ø§Ø±Ø§Øª ÙÙŠ Ø§Ù„Ø¬Ø²Ø§Ø¦Ø±</footer>
  
 <script>
 const API = 'https://aqarmatch.onrender.com';
@@ -361,33 +361,33 @@ function showPage(name, btn) {
  
 function setDealType(type) {
   document.getElementById('deal_type').value = type;
-  document.getElementById('btn-sale').classList.toggle('active', type === 'بيع');
-  document.getElementById('btn-rent').classList.toggle('active', type === 'إيجار');
+  document.getElementById('btn-sale').classList.toggle('active', type === 'Ø¨ÙŠØ¹');
+  document.getElementById('btn-rent').classList.toggle('active', type === 'Ø¥ÙŠØ¬Ø§Ø±');
 }
  
-// ─── إظهار/إخفاء الحقول حسب نوع العقار ─────────────────
+// â”€â”€â”€ Ø¥Ø¸Ù‡Ø§Ø±/Ø¥Ø®ÙØ§Ø¡ Ø§Ù„Ø­Ù‚ÙˆÙ„ Ø­Ø³Ø¨ Ù†ÙˆØ¹ Ø§Ù„Ø¹Ù‚Ø§Ø± â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function show(id) { document.getElementById(id).classList.remove('hidden-field'); }
 function hide(id) { document.getElementById(id).classList.add('hidden-field'); }
  
 function onPropertyTypeChange() {
   const type = document.getElementById('property_type').value;
-  // إخفاء الكل أولاً
+  // Ø¥Ø®ÙØ§Ø¡ Ø§Ù„ÙƒÙ„ Ø£ÙˆÙ„Ø§Ù‹
   hide('rooms-group'); hide('floors-group'); hide('garden-group'); hide('pool-group');
   document.getElementById('rooms').value = '';
   document.getElementById('floors').value = '';
   document.getElementById('garden').value = '';
   document.getElementById('pool').value = '';
  
-  if (type === 'شقة') {
+  if (type === 'Ø´Ù‚Ø©') {
     show('rooms-group');
   }
-  if (type === 'فيلا') {
+  if (type === 'ÙÙŠÙ„Ø§') {
     show('floors-group'); show('garden-group'); show('pool-group');
   }
-  if (type === 'منزل فردي') {
+  if (type === 'Ù…Ù†Ø²Ù„ ÙØ±Ø¯ÙŠ') {
     show('floors-group'); show('garden-group');
   }
-  if (type === 'تجاري') {
+  if (type === 'ØªØ¬Ø§Ø±ÙŠ') {
     show('floors-group');
   }
 }
@@ -422,7 +422,7 @@ function handleImages(e) {
 function removeImage(i) { selectedImages.splice(i, 1); renderPreviews(); }
 function renderPreviews() {
   document.getElementById('image-previews').innerHTML = selectedImages.map((img, i) =>
-    `<div class="image-preview-item"><img src="${img.dataUrl}"><button onclick="removeImage(${i})">×</button></div>`
+    `<div class="image-preview-item"><img src="${img.dataUrl}"><button onclick="removeImage(${i})">Ã—</button></div>`
   ).join('');
 }
  
@@ -457,12 +457,12 @@ async function submitListing() {
   const alertDiv = document.getElementById('seller-alert');
  
   if (!property_type || !wilaya || !municipality || !neighborhoods.length || !asking_price || !floor_price || !user_phone) {
-    alertDiv.innerHTML = '<div class="alert alert-error">يرجى ملء جميع الحقول الإلزامية</div>'; return;
+    alertDiv.innerHTML = '<div class="alert alert-error">ÙŠØ±Ø¬Ù‰ Ù…Ù„Ø¡ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø­Ù‚ÙˆÙ„ Ø§Ù„Ø¥Ù„Ø²Ø§Ù…ÙŠØ©</div>'; return;
   }
   if (floor_price > asking_price) {
-    alertDiv.innerHTML = '<div class="alert alert-error">السعر السري يجب أن يكون أقل من السعر المعلن</div>'; return;
+    alertDiv.innerHTML = '<div class="alert alert-error">Ø§Ù„Ø³Ø¹Ø± Ø§Ù„Ø³Ø±ÙŠ ÙŠØ¬Ø¨ Ø£Ù† ÙŠÙƒÙˆÙ† Ø£Ù‚Ù„ Ù…Ù† Ø§Ù„Ø³Ø¹Ø± Ø§Ù„Ù…Ø¹Ù„Ù†</div>'; return;
   }
-  btn.disabled = true; btn.textContent = 'جاري النشر...';
+  btn.disabled = true; btn.textContent = 'Ø¬Ø§Ø±ÙŠ Ø§Ù„Ù†Ø´Ø±...';
   try {
     const images = selectedImages.map(img => img.dataUrl);
     const res = await fetch(`${API}/api/listings`, {
@@ -472,23 +472,23 @@ async function submitListing() {
     });
     const data = await res.json();
     if (res.ok) {
-      alertDiv.innerHTML = '<div class="alert alert-success">✅ تم نشر عقارك بنجاح!</div>';
+      alertDiv.innerHTML = '<div class="alert alert-success">âœ… ØªÙ… Ù†Ø´Ø± Ø¹Ù‚Ø§Ø±Ùƒ Ø¨Ù†Ø¬Ø§Ø­!</div>';
       neighborhoods = []; selectedImages = []; renderNeighborhoods(); renderPreviews();
       ['wilaya','municipality','asking_price','floor_price','user_phone','area'].forEach(id => document.getElementById(id).value = '');
       ['property_type','rooms','facades','floors','garden','pool'].forEach(id => document.getElementById(id).value = '');
       ['rooms-group','floors-group','garden-group','pool-group'].forEach(id => hide(id));
     } else {
-      alertDiv.innerHTML = `<div class="alert alert-error">${data.error || 'حدث خطأ'}</div>`;
+      alertDiv.innerHTML = `<div class="alert alert-error">${data.error || 'Ø­Ø¯Ø« Ø®Ø·Ø£'}</div>`;
     }
   } catch(e) {
-    alertDiv.innerHTML = '<div class="alert alert-error">تعذر الاتصال بالخادم</div>';
+    alertDiv.innerHTML = '<div class="alert alert-error">ØªØ¹Ø°Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù…</div>';
   }
-  btn.disabled = false; btn.textContent = 'نشر العقار';
+  btn.disabled = false; btn.textContent = 'Ù†Ø´Ø± Ø§Ù„Ø¹Ù‚Ø§Ø±';
 }
  
 async function loadListings() {
   const container = document.getElementById('listings-container');
-  container.innerHTML = '<div class="loading">جاري التحميل...</div>';
+  container.innerHTML = '<div class="loading">Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ­Ù…ÙŠÙ„...</div>';
   const deal = document.getElementById('filter-deal').value;
   const type = document.getElementById('filter-type').value;
   const wilaya = document.getElementById('filter-wilaya').value.trim();
@@ -500,50 +500,50 @@ async function loadListings() {
     let listings = await res.json();
     if (type) listings = listings.filter(l => l.property_type === type);
     if (!listings.length) {
-      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات متاحة حالياً</div>'; return;
+      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¹Ù‚Ø§Ø±Ø§Øª Ù…ØªØ§Ø­Ø© Ø­Ø§Ù„ÙŠØ§Ù‹</div>'; return;
     }
     container.innerHTML = listings.map(l => {
       const imgs = l.images && l.images.length ? l.images : [];
       const imgsJson = JSON.stringify(imgs).replace(/"/g, '&quot;');
       let imgHtml = '';
       if (imgs.length === 0) {
-        imgHtml = `<div class="listing-card-images"><div class="no-img">🏠</div></div>`;
+        imgHtml = `<div class="listing-card-images"><div class="no-img">ðŸ </div></div>`;
       } else if (imgs.length === 1) {
         imgHtml = `<div class="listing-card-images"><img src="${imgs[0]}" onclick='openLightbox(${imgsJson},0)'></div>`;
       } else {
         const shown = imgs.slice(0, 3);
-        imgHtml = `<div class="listing-card-images"><div class="img-gallery">${shown.map((img,i) => `<img src="${img}" onclick='openLightbox(${imgsJson},${i})'>`).join('')}</div>${imgs.length > 3 ? `<div class="img-count">+${imgs.length-3} صور</div>` : ''}</div>`;
+        imgHtml = `<div class="listing-card-images"><div class="img-gallery">${shown.map((img,i) => `<img src="${img}" onclick='openLightbox(${imgsJson},${i})'>`).join('')}</div>${imgs.length > 3 ? `<div class="img-count">+${imgs.length-3} ØµÙˆØ±</div>` : ''}</div>`;
       }
       const details = [
-        l.area ? `📐 ${l.area} م²` : '',
-        l.rooms ? `🛏 ${l.rooms} غرف` : '',
-        l.floors ? `🏗 ${l.floors} طوابق` : '',
-        l.facades ? `🧱 ${l.facades} واجهات` : '',
-        l.garden ? `🌿 ${l.garden} حديقة` : '',
-        l.pool ? `🏊 ${l.pool} مسبح` : '',
+        l.area ? `ðŸ“ ${l.area} Ù…Â²` : '',
+        l.rooms ? `ðŸ› ${l.rooms} ØºØ±Ù` : '',
+        l.floors ? `ðŸ— ${l.floors} Ø·ÙˆØ§Ø¨Ù‚` : '',
+        l.facades ? `ðŸ§± ${l.facades} ÙˆØ§Ø¬Ù‡Ø§Øª` : '',
+        l.garden ? `ðŸŒ¿ ${l.garden} Ø­Ø¯ÙŠÙ‚Ø©` : '',
+        l.pool ? `ðŸŠ ${l.pool} Ù…Ø³Ø¨Ø­` : '',
       ].filter(Boolean);
       return `
         <div class="listing-card">
           ${imgHtml}
           <div class="listing-card-body">
-            <h3>${l.deal_type}${l.property_type ? ' — ' + l.property_type : ''} — ${l.wilaya}، ${l.municipality}</h3>
+            <h3>${l.deal_type}${l.property_type ? ' â€” ' + l.property_type : ''} â€” ${l.wilaya}ØŒ ${l.municipality}</h3>
             <div class="listing-meta">
-              ${(l.neighborhoods||[]).map(n => `<span class="tag">📍 ${n}</span>`).join('')}
+              ${(l.neighborhoods||[]).map(n => `<span class="tag">ðŸ“ ${n}</span>`).join('')}
               ${details.map(d => `<span class="tag">${d}</span>`).join('')}
-              <span class="tag">⏰ ${l.days_remaining} يوم</span>
+              <span class="tag">â° ${l.days_remaining} ÙŠÙˆÙ…</span>
             </div>
-            <span class="price-badge">${l.asking_price.toLocaleString()} دج</span>
+            <span class="price-badge">${l.asking_price.toLocaleString()} Ø¯Ø¬</span>
             <div class="match-form">
-              <input type="number" placeholder="ميزانيتك (دج)" id="budget-${l.id}">
-              <input type="tel" placeholder="واتساب" id="phone-${l.id}">
-              <button onclick="checkMatch(${l.id})">فحص التطابق</button>
+              <input type="number" placeholder="Ù…ÙŠØ²Ø§Ù†ÙŠØªÙƒ (Ø¯Ø¬)" id="budget-${l.id}">
+              <input type="tel" placeholder="ÙˆØ§ØªØ³Ø§Ø¨" id="phone-${l.id}">
+              <button onclick="checkMatch(${l.id})">ÙØ­Øµ Ø§Ù„ØªØ·Ø§Ø¨Ù‚</button>
             </div>
             <div id="match-result-${l.id}"></div>
           </div>
         </div>`;
     }).join('');
   } catch(e) {
-    container.innerHTML = '<div class="card" style="text-align:center;color:#c62828">تعذر تحميل العقارات</div>';
+    container.innerHTML = '<div class="card" style="text-align:center;color:#c62828">ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø§Ù„Ø¹Ù‚Ø§Ø±Ø§Øª</div>';
   }
 }
  
@@ -551,13 +551,13 @@ async function checkMatch(id) {
   const budget = parseFloat(document.getElementById(`budget-${id}`).value);
   const buyer_phone = document.getElementById(`phone-${id}`).value.trim();
   const resultDiv = document.getElementById(`match-result-${id}`);
-  if (!budget || !buyer_phone) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">يرجى إدخال الميزانية ورقم الواتساب</div>'; return; }
-  resultDiv.innerHTML = '<div style="color:#888;font-size:0.85rem;margin-top:0.5rem">جاري الفحص...</div>';
+  if (!budget || !buyer_phone) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">ÙŠØ±Ø¬Ù‰ Ø¥Ø¯Ø®Ø§Ù„ Ø§Ù„Ù…ÙŠØ²Ø§Ù†ÙŠØ© ÙˆØ±Ù‚Ù… Ø§Ù„ÙˆØ§ØªØ³Ø§Ø¨</div>'; return; }
+  resultDiv.innerHTML = '<div style="color:#888;font-size:0.85rem;margin-top:0.5rem">Ø¬Ø§Ø±ÙŠ Ø§Ù„ÙØ­Øµ...</div>';
   try {
     const res = await fetch(`${API}/api/listings/${id}/match`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({budget, buyer_phone}) });
     const data = await res.json();
     resultDiv.innerHTML = `<div class="alert alert-${data.matched ? 'success' : 'error'}" style="margin-top:0.5rem">${data.message}</div>`;
-  } catch(e) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">تعذر الاتصال بالخادم</div>'; }
+  } catch(e) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">ØªØ¹Ø°Ø± Ø§Ù„Ø§ØªØµØ§Ù„ Ø¨Ø§Ù„Ø®Ø§Ø¯Ù…</div>'; }
 }
  
 async function loadStats() {
@@ -570,7 +570,7 @@ async function loadStats() {
   } catch(e) {}
 }
  
-const starLabels = ['','سيء جداً','سيء','مقبول','جيد','ممتاز! 🎉'];
+const starLabels = ['','Ø³ÙŠØ¡ Ø¬Ø¯Ø§Ù‹','Ø³ÙŠØ¡','Ù…Ù‚Ø¨ÙˆÙ„','Ø¬ÙŠØ¯','Ù…Ù…ØªØ§Ø²! ðŸŽ‰'];
 let ratings = [];
 try { ratings = JSON.parse(localStorage.getItem('aqar_ratings') || '[]'); } catch(e) {}
  
@@ -580,7 +580,7 @@ function hoverRating(n) {
 }
 function unhoverRating() {
   document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('active', i < currentRating));
-  document.getElementById('star-label').textContent = currentRating ? starLabels[currentRating] : 'اختر تقييمك';
+  document.getElementById('star-label').textContent = currentRating ? starLabels[currentRating] : 'Ø§Ø®ØªØ± ØªÙ‚ÙŠÙŠÙ…Ùƒ';
 }
 function setRating(n) { currentRating = n; document.getElementById('rate-btn').disabled = false; unhoverRating(); }
 function submitRating() {
@@ -589,7 +589,7 @@ function submitRating() {
   ratings.unshift({ stars: currentRating, comment, date: new Date().toLocaleDateString('ar-DZ') });
   if (ratings.length > 50) ratings = ratings.slice(0, 50);
   try { localStorage.setItem('aqar_ratings', JSON.stringify(ratings)); } catch(e) {}
-  document.getElementById('rate-alert').innerHTML = '<div class="alert alert-success">✅ شكراً على تقييمك!</div>';
+  document.getElementById('rate-alert').innerHTML = '<div class="alert alert-success">âœ… Ø´ÙƒØ±Ø§Ù‹ Ø¹Ù„Ù‰ ØªÙ‚ÙŠÙŠÙ…Ùƒ!</div>';
   document.getElementById('rating-comment').value = '';
   currentRating = 0;
   document.getElementById('rate-btn').disabled = true;
@@ -599,10 +599,10 @@ function submitRating() {
 function renderRatingsList(containerId) {
   const el = document.getElementById(containerId);
   if (!el) return;
-  if (!ratings.length) { el.innerHTML = '<div style="text-align:center;color:#888;padding:1rem">لا توجد تقييمات بعد</div>'; return; }
+  if (!ratings.length) { el.innerHTML = '<div style="text-align:center;color:#888;padding:1rem">Ù„Ø§ ØªÙˆØ¬Ø¯ ØªÙ‚ÙŠÙŠÙ…Ø§Øª Ø¨Ø¹Ø¯</div>'; return; }
   const avg = (ratings.reduce((s,r) => s + r.stars, 0) / ratings.length).toFixed(1);
-  el.innerHTML = `<div style="text-align:center;margin-bottom:1rem"><div style="font-size:2rem;font-weight:700;color:#0F2744">${avg}</div><div style="color:#f5a623;font-size:1.2rem">${'★'.repeat(Math.round(avg))}${'☆'.repeat(5-Math.round(avg))}</div><div style="font-size:0.8rem;color:#888">${ratings.length} تقييم</div></div>`
-  + ratings.slice(0,10).map(r => `<div class="rating-item"><div class="rating-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>${r.comment?`<div style="font-size:0.82rem;color:#555">${r.comment}</div>`:''}<div class="rating-date">${r.date}</div></div>`).join('');
+  el.innerHTML = `<div style="text-align:center;margin-bottom:1rem"><div style="font-size:2rem;font-weight:700;color:#0F2744">${avg}</div><div style="color:#f5a623;font-size:1.2rem">${'â˜…'.repeat(Math.round(avg))}${'â˜†'.repeat(5-Math.round(avg))}</div><div style="font-size:0.8rem;color:#888">${ratings.length} ØªÙ‚ÙŠÙŠÙ…</div></div>`
+  + ratings.slice(0,10).map(r => `<div class="rating-item"><div class="rating-stars">${'â˜…'.repeat(r.stars)}${'â˜†'.repeat(5-r.stars)}</div>${r.comment?`<div style="font-size:0.82rem;color:#555">${r.comment}</div>`:''}<div class="rating-date">${r.date}</div></div>`).join('');
 }
 function loadRatings() { renderRatingsList('ratings-list'); }
 function loadHomeRatings() { renderRatingsList('home-ratings'); }
@@ -611,3 +611,4 @@ loadStats(); loadHomeRatings();
 </body>
 </html>
  
+
