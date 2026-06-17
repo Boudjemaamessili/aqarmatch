@@ -428,4 +428,64 @@ router.post("/listings/:id/renew", async (req: Request, res: Response) => {
   res.json(formatListing(updated));
 });
 
+// ─── لوحة تحكم المسؤول ──────────────────────────────────────────────────────
+const ADMIN_PASSWORD = "belkis26012014";
+
+router.get("/admin/listings", async (req: Request, res: Response) => {
+  const password = req.query.password as string | undefined;
+  if (password !== ADMIN_PASSWORD) {
+    res.status(401).json({ error: "كلمة المرور غير صحيحة" });
+    return;
+  }
+
+  const rows = await db
+    .select()
+    .from(listingsTable)
+    .orderBy(desc(listingsTable.created_at));
+
+  res.json(
+    rows.map((row) => ({
+      id: row.id,
+      deal_type: row.deal_type,
+      property_type: row.property_type,
+      wilaya: row.wilaya,
+      municipality: row.municipality,
+      neighborhoods: row.neighborhoods ?? [],
+      asking_price: parseFloat(row.asking_price as unknown as string),
+      user_phone: row.user_phone,
+      created_at: row.created_at.toISOString(),
+      expires_at: new Date(row.expires_at).toISOString(),
+      is_active: computeIsActive(row),
+      days_remaining: computeDaysRemaining(new Date(row.expires_at)),
+    }))
+  );
+});
+
+router.delete("/admin/listings/:id", async (req: Request, res: Response) => {
+  const password = req.query.password as string | undefined;
+  if (password !== ADMIN_PASSWORD) {
+    res.status(401).json({ error: "كلمة المرور غير صحيحة" });
+    return;
+  }
+
+  const id = parseInt(String(req.params.id));
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  await db.delete(matchesTable).where(eq(matchesTable.listing_id, id));
+  const deleted = await db
+    .delete(listingsTable)
+    .where(eq(listingsTable.id, id))
+    .returning();
+
+  if (!deleted.length) {
+    res.status(404).json({ error: "Listing not found" });
+    return;
+  }
+
+  res.json({ success: true, deleted_id: id });
+});
+
 export default router;
