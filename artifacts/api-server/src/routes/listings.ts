@@ -138,6 +138,13 @@ function formatListing(row: typeof listingsTable.$inferSelect) {
     // user_phone مكشوف هنا لأن البائع يدخل رقمه عند النشر
     // لكن رقم المشتري لا يُكشف للبائع إلا بعد التأكيد
     user_phone: row.user_phone,
+    property_type: row.property_type,
+    area: row.area,
+    rooms: row.rooms,
+    facades: row.facades,
+    floors: row.floors,
+    garden: row.garden,
+    pool: row.pool,
     created_at: row.created_at.toISOString(),
     expires_at: expiresAt.toISOString(),
     is_active: isActive,
@@ -147,7 +154,6 @@ function formatListing(row: typeof listingsTable.$inferSelect) {
 }
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
-
 router.get("/wilayat", (_req: Request, res: Response) => {
   res.json(WILAYAT);
 });
@@ -158,6 +164,7 @@ router.get("/listings/stats", async (_req: Request, res: Response) => {
     .select()
     .from(listingsTable)
     .orderBy(desc(listingsTable.created_at));
+
   const activeListings = allListings.filter(
     (l) => l.is_active && new Date(l.expires_at) > now
   );
@@ -186,14 +193,14 @@ router.get("/listings", async (req: Request, res: Response) => {
     res.status(400).json({ error: "Invalid query params" });
     return;
   }
-
   const { deal_type, wilaya, municipality, max_price } = parsed.data;
-  const now = new Date();
 
+  const now = new Date();
   const conditions: ReturnType<typeof eq>[] = [
     gt(listingsTable.expires_at, now),
     eq(listingsTable.is_active, true),
   ];
+
   if (deal_type)              conditions.push(eq(listingsTable.deal_type, deal_type));
   if (wilaya)                 conditions.push(eq(listingsTable.wilaya, wilaya));
   if (municipality)           conditions.push(eq(listingsTable.municipality, municipality));
@@ -218,7 +225,8 @@ router.post("/listings", async (req: Request, res: Response) => {
   const {
     deal_type, wilaya, municipality, neighborhoods,
     asking_price, floor_price, user_phone,
-  } = parsed.data;
+    property_type, area, rooms, facades, floors, garden, pool,
+  } = parsed.data as any;
 
   if (floor_price > asking_price) {
     res.status(400).json({
@@ -240,6 +248,13 @@ router.post("/listings", async (req: Request, res: Response) => {
       asking_price: String(asking_price),
       floor_price:  String(floor_price),   // محفوظ في DB فقط — لا يُعاد للواجهة
       user_phone,
+      property_type: property_type ?? null,
+      area: area ?? null,
+      rooms: rooms ?? null,
+      facades: facades ?? null,
+      floors: floors ?? null,
+      garden: garden ?? null,
+      pool: pool ?? null,
       expires_at: expiresAt,
       is_active: true,
     })
@@ -400,6 +415,7 @@ router.post("/listings/:id/renew", async (req: Request, res: Response) => {
     new Date(listing.expires_at) > new Date()
       ? new Date(listing.expires_at)
       : new Date();
+
   const newExpiresAt = new Date(baseDate);
   newExpiresAt.setDate(newExpiresAt.getDate() + LISTING_EXPIRY_DAYS);
 
