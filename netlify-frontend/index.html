@@ -33,16 +33,22 @@
     .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
     .alert-error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
 
-    /* بطاقة العقار */
     .listing-card { background: white; border-radius: 14px; margin-bottom: 1.25rem; box-shadow: 0 3px 14px rgba(0,0,0,0.1); border-right: 5px solid #0F2744; overflow: hidden; }
-    .listing-card-header { background: #0F2744; color: white; padding: 0.75rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .listing-card-header { background: #0F2744; color: white; padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .listing-card-header .deal-type-badge { background: #E8A87C; color: #0F2744; padding: 0.15rem 0.6rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-left: 0.5rem; }
     .listing-card-header h3 { font-size: 1rem; font-weight: 700; }
-    .listing-card-header .price-badge { background: #E8A87C; color: #0F2744; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
+    .listing-card-header .price-badge { background: white; color: #0F2744; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
     .listing-card-body { padding: 1.25rem; }
-    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 0.6rem; margin: 0.75rem 0; }
-    .spec-item { background: #f0f4ff; border-radius: 8px; padding: 0.5rem 0.75rem; display: flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; color: #333; }
-    .spec-item .spec-icon { font-size: 1rem; }
-    .spec-item .spec-val { font-weight: 600; color: #0F2744; }
+    .property-type-line { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; padding-bottom: 0.75rem; border-bottom: 1px dashed #e0e0e0; }
+    .property-type-line .big-icon { font-size: 1.6rem; }
+    .property-type-line .type-name { font-size: 1.05rem; font-weight: 700; color: #0F2744; }
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.5rem; margin-bottom: 0.9rem; }
+    .spec-item { background: #f0f4ff; border-radius: 8px; padding: 0.55rem 0.6rem; text-align: center; }
+    .spec-item.spec-missing { background: #f7f7f7; color: #aaa; }
+    .spec-item .spec-icon { font-size: 1.1rem; display: block; margin-bottom: 0.15rem; }
+    .spec-item .spec-label { font-size: 0.68rem; color: #777; display: block; }
+    .spec-item .spec-val { font-weight: 700; color: #0F2744; font-size: 0.85rem; }
+    .spec-item.spec-missing .spec-val { color: #bbb; font-weight: 400; font-size: 0.75rem; }
     .neighborhoods-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
     .tag { background: #eef2f8; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; color: #555; }
     .tag-days { background: #fff3e0; color: #e65100; }
@@ -77,7 +83,7 @@
     .rating-stars { color: #f5a623; font-size: 1rem; margin-bottom: 0.25rem; }
     .rating-date { font-size: 0.75rem; color: #aaa; margin-top: 0.2rem; }
     .hidden-field { display: none !important; }
-    .type-badge { background: #e8f0fe; color: #1a3a6c; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+    .results-count { font-size: 0.85rem; color: #666; margin-bottom: 1rem; padding: 0 0.25rem; }
     footer { text-align: center; padding: 2rem; color: #888; font-size: 0.82rem; }
   </style>
 </head>
@@ -216,6 +222,7 @@
         <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
       </div>
     </div>
+    <div id="results-count" class="results-count"></div>
     <div id="listings-container"><div class="loading">جاري التحميل...</div></div>
   </div>
 </div>
@@ -252,6 +259,11 @@
 const API = 'https://aqarmatch.onrender.com';
 let neighborhoods = [];
 let currentRating = 0;
+
+const TYPE_ICONS = {
+  'شقة': '🏢', 'فيلا': '🏰', 'منزل فردي': '🏠', 'تجاري': '🏪',
+  'أرض فلاحية': '🌾', 'أرض صالحة للبناء': '🏗️', 'أخرى': '📦'
+};
 
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -344,25 +356,37 @@ async function submitListing() {
   btn.disabled = false; btn.textContent = 'نشر العقار';
 }
 
+function specBox(icon, label, val) {
+  if (val) {
+    return '<div class="spec-item"><span class="spec-icon">' + icon + '</span><span class="spec-label">' + label + '</span><span class="spec-val">' + val + '</span></div>';
+  }
+  return '<div class="spec-item spec-missing"><span class="spec-icon">' + icon + '</span><span class="spec-label">' + label + '</span><span class="spec-val">غير محدد</span></div>';
+}
+
 function buildSpecsGrid(l) {
-  const specs = [
-    l.property_type ? {icon:'🏠', label:'النوع', val: l.property_type} : null,
-    l.area ? {icon:'📐', label:'المساحة', val: l.area + ' م²'} : null,
-    l.rooms ? {icon:'🛏', label:'الغرف', val: l.rooms + ' غرف'} : null,
-    l.floors ? {icon:'🏗', label:'الطوابق', val: l.floors} : null,
-    l.facades ? {icon:'🧱', label:'الواجهات', val: l.facades} : null,
-    l.garden ? {icon:'🌿', label:'الحدائق', val: l.garden} : null,
-    l.pool ? {icon:'🏊', label:'المسابح', val: l.pool} : null,
-  ].filter(Boolean);
-  if (!specs.length) return '';
-  return '<div class="specs-grid">' + specs.map(s =>
-    '<div class="spec-item"><span class="spec-icon">' + s.icon + '</span><span>' + s.label + ': <span class="spec-val">' + s.val + '</span></span></div>'
-  ).join('') + '</div>';
+  let boxes = '';
+  boxes += specBox('📐', 'المساحة', l.area ? (l.area + ' م²') : '');
+  boxes += specBox('🧱', 'الواجهات', l.facades || '');
+  if (l.property_type === 'شقة') {
+    boxes += specBox('🛏', 'الغرف', l.rooms || '');
+  }
+  if (['فيلا','منزل فردي','تجاري'].includes(l.property_type)) {
+    boxes += specBox('🏗', 'الطوابق', l.floors || '');
+  }
+  if (['فيلا','منزل فردي'].includes(l.property_type)) {
+    boxes += specBox('🌿', 'الحدائق', l.garden || '');
+  }
+  if (l.property_type === 'فيلا') {
+    boxes += specBox('🏊', 'المسابح', l.pool || '');
+  }
+  return '<div class="specs-grid">' + boxes + '</div>';
 }
 
 async function loadListings() {
   const container = document.getElementById('listings-container');
+  const countDiv = document.getElementById('results-count');
   container.innerHTML = '<div class="loading">جاري التحميل...</div>';
+  countDiv.textContent = '';
   const deal = document.getElementById('filter-deal').value;
   const type = document.getElementById('filter-type').value;
   const wilaya = document.getElementById('filter-wilaya').value.trim();
@@ -374,16 +398,20 @@ async function loadListings() {
     let listings = await res.json();
     if (type) listings = listings.filter(l => l.property_type === type);
     if (!listings.length) {
-      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات متاحة حالياً</div>'; return;
+      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات تطابق معايير البحث</div>'; return;
     }
+    countDiv.textContent = 'تم العثور على ' + listings.length + ' عقار';
     container.innerHTML = listings.map(l => {
       const neighborhoodTags = (l.neighborhoods||[]).map(n => '<span class="tag">📍 ' + n + '</span>').join('');
+      const typeIcon = TYPE_ICONS[l.property_type] || '🏠';
+      const typeName = l.property_type || 'نوع غير محدد';
       return '<div class="listing-card">' +
         '<div class="listing-card-header">' +
-          '<h3>' + l.deal_type + ' — ' + l.wilaya + '، ' + l.municipality + '</h3>' +
+          '<h3><span class="deal-type-badge">' + l.deal_type + '</span>' + l.wilaya + '، ' + l.municipality + '</h3>' +
           '<span class="price-badge">' + l.asking_price.toLocaleString() + ' دج</span>' +
         '</div>' +
         '<div class="listing-card-body">' +
+          '<div class="property-type-line"><span class="big-icon">' + typeIcon + '</span><span class="type-name">' + typeName + '</span></div>' +
           buildSpecsGrid(l) +
           '<div class="neighborhoods-row">' + neighborhoodTags +
             '<span class="tag tag-days">⏰ ' + l.days_remaining + ' يوم متبقي</span>' +
