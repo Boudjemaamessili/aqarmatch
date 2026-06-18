@@ -217,9 +217,19 @@
           </select>
         </div>
       </div>
+      <div class="row">
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>الولاية</label>
+          <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        </div>
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>البلدية</label>
+          <input type="text" id="filter-municipality" placeholder="جميع البلديات" oninput="loadListings()">
+        </div>
+      </div>
       <div class="form-group" style="margin-bottom:0">
-        <label>الولاية</label>
-        <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        <label>الحي</label>
+        <input type="text" id="filter-neighborhood" placeholder="جميع الأحياء" oninput="loadListings()">
       </div>
     </div>
     <div id="results-count" class="results-count"></div>
@@ -390,13 +400,17 @@ async function loadListings() {
   const deal = document.getElementById('filter-deal').value;
   const type = document.getElementById('filter-type').value;
   const wilaya = document.getElementById('filter-wilaya').value.trim();
+  const municipality = document.getElementById('filter-municipality').value.trim();
+  const neighborhood = document.getElementById('filter-neighborhood').value.trim();
   let url = API + '/api/listings?';
   if (deal) url += 'deal_type=' + encodeURIComponent(deal) + '&';
   if (wilaya) url += 'wilaya=' + encodeURIComponent(wilaya) + '&';
+  if (municipality) url += 'municipality=' + encodeURIComponent(municipality) + '&';
   try {
     const res = await fetch(url);
     let listings = await res.json();
     if (type) listings = listings.filter(l => l.property_type === type);
+    if (neighborhood) listings = listings.filter(l => (l.neighborhoods||[]).some(n => n.includes(neighborhood)));
     if (!listings.length) {
       container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات تطابق معايير البحث</div>'; return;
     }
