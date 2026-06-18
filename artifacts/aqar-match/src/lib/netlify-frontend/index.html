@@ -14,7 +14,7 @@
     nav button { background: transparent; border: 1.5px solid rgba(255,255,255,0.4); color: white; padding: 0.4rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; }
     @media (max-width: 600px) { nav button { padding: 0.3rem 0.6rem; font-size: 0.75rem; } header { flex-direction: column; gap: 0.5rem; } }
     nav button:hover, nav button.active { background: #E8A87C; border-color: #E8A87C; color: #0F2744; font-weight: 600; }
-    .container { max-width: 680px; margin: 2rem auto; padding: 0 1rem; }
+    .container { max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
     .card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 1.5rem; }
     .card h2 { font-size: 1.2rem; color: #0F2744; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 2px solid #f0f0e8; }
     .form-group { margin-bottom: 1.25rem; }
@@ -32,15 +32,32 @@
     .alert { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem; }
     .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
     .alert-error { background: #fdecea; color: #c62828; border: 1px solid #ef9a9a; }
-    .listing-card { background: white; border-radius: 12px; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.08); border-right: 4px solid #0F2744; overflow: hidden; }
+
+    .listing-card { background: white; border-radius: 14px; margin-bottom: 1.25rem; box-shadow: 0 3px 14px rgba(0,0,0,0.1); border-right: 5px solid #0F2744; overflow: hidden; }
+    .listing-card-header { background: #0F2744; color: white; padding: 0.85rem 1.25rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .listing-card-header .deal-type-badge { background: #E8A87C; color: #0F2744; padding: 0.15rem 0.6rem; border-radius: 6px; font-size: 0.78rem; font-weight: 700; margin-left: 0.5rem; }
+    .listing-card-header h3 { font-size: 1rem; font-weight: 700; }
+    .listing-card-header .price-badge { background: white; color: #0F2744; padding: 0.3rem 0.9rem; border-radius: 20px; font-weight: 700; font-size: 0.9rem; }
     .listing-card-body { padding: 1.25rem; }
-    .listing-card h3 { font-size: 1rem; color: #0F2744; margin-bottom: 0.5rem; }
-    .listing-meta { font-size: 0.82rem; color: #666; margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .tag { background: #eef2f8; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; }
-    .price-badge { background: #0F2744; color: white; padding: 0.3rem 0.8rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; }
-    .match-form { margin-top: 0.75rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .property-type-line { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; padding-bottom: 0.75rem; border-bottom: 1px dashed #e0e0e0; }
+    .property-type-line .big-icon { font-size: 1.6rem; }
+    .property-type-line .type-name { font-size: 1.05rem; font-weight: 700; color: #0F2744; }
+    .specs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 0.5rem; margin-bottom: 0.9rem; }
+    .spec-item { background: #f0f4ff; border-radius: 8px; padding: 0.55rem 0.6rem; text-align: center; }
+    .spec-item.spec-missing { background: #f7f7f7; color: #aaa; }
+    .spec-item .spec-icon { font-size: 1.1rem; display: block; margin-bottom: 0.15rem; }
+    .spec-item .spec-label { font-size: 0.68rem; color: #777; display: block; }
+    .spec-item .spec-val { font-weight: 700; color: #0F2744; font-size: 0.85rem; }
+    .spec-item.spec-missing .spec-val { color: #bbb; font-weight: 400; font-size: 0.75rem; }
+    .neighborhoods-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .tag { background: #eef2f8; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.78rem; color: #555; }
+    .tag-days { background: #fff3e0; color: #e65100; }
+    .match-section { background: #f8f9ff; border-radius: 10px; padding: 1rem; margin-top: 0.75rem; }
+    .match-section p { font-size: 0.82rem; color: #666; margin-bottom: 0.5rem; }
+    .match-form { display: flex; gap: 0.5rem; flex-wrap: wrap; }
     .match-form input { flex: 1; min-width: 100px; padding: 0.5rem 0.75rem; font-size: 0.85rem; }
-    .match-form button { padding: 0.5rem 1rem; background: #E8A87C; color: #0F2744; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+    .match-form button { padding: 0.5rem 1rem; background: #E8A87C; color: #0F2744; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; white-space: nowrap; }
+
     .page { display: none; }
     .page.active { display: block; }
     .loading { text-align: center; color: #888; padding: 2rem; }
@@ -66,6 +83,7 @@
     .rating-stars { color: #f5a623; font-size: 1rem; margin-bottom: 0.25rem; }
     .rating-date { font-size: 0.75rem; color: #aaa; margin-top: 0.2rem; }
     .hidden-field { display: none !important; }
+    .results-count { font-size: 0.85rem; color: #666; margin-bottom: 1rem; padding: 0 0.25rem; }
     footer { text-align: center; padding: 2rem; color: #888; font-size: 0.82rem; }
   </style>
 </head>
@@ -133,14 +151,8 @@
         </select>
       </div>
       <div class="row">
-        <div class="form-group">
-          <label>الولاية</label>
-          <input type="text" id="wilaya" placeholder="مثال: البليدة">
-        </div>
-        <div class="form-group">
-          <label>البلدية</label>
-          <input type="text" id="municipality" placeholder="مثال: بوفاريك">
-        </div>
+        <div class="form-group"><label>الولاية</label><input type="text" id="wilaya" placeholder="مثال: البليدة"></div>
+        <div class="form-group"><label>البلدية</label><input type="text" id="municipality" placeholder="مثال: بوفاريك"></div>
       </div>
       <div class="form-group">
         <label>الأحياء</label>
@@ -151,75 +163,30 @@
         <div class="neighborhoods-tags" id="neighborhoods-tags"></div>
       </div>
       <div class="row">
-        <div class="form-group">
-          <label>المساحة (م²)</label>
-          <input type="number" id="area" placeholder="مثال: 120">
-        </div>
-        <div class="form-group">
-          <label>عدد الواجهات</label>
-          <select id="facades">
-            <option value="">اختر</option>
-            <option value="1">واجهة 1</option>
-            <option value="2">واجهتان 2</option>
-            <option value="3">3 واجهات</option>
-            <option value="4">4 واجهات</option>
-          </select>
+        <div class="form-group"><label>المساحة (م²)</label><input type="number" id="area" placeholder="مثال: 120"></div>
+        <div class="form-group"><label>عدد الواجهات</label>
+          <select id="facades"><option value="">اختر</option><option value="1">واجهة 1</option><option value="2">واجهتان 2</option><option value="3">3 واجهات</option><option value="4">4 واجهات</option></select>
         </div>
       </div>
       <div class="row">
-        <div class="form-group hidden-field" id="rooms-group">
-          <label>عدد الغرف 🛏</label>
-          <select id="rooms">
-            <option value="">اختر</option>
-            <option value="1">1 غرفة</option>
-            <option value="2">2 غرف</option>
-            <option value="3">3 غرف</option>
-            <option value="4">4 غرف</option>
-            <option value="5">5 غرف</option>
-            <option value="6+">6+ غرف</option>
-          </select>
+        <div class="form-group hidden-field" id="rooms-group"><label>عدد الغرف 🛏</label>
+          <select id="rooms"><option value="">اختر</option><option value="1">1 غرفة</option><option value="2">2 غرف</option><option value="3">3 غرف</option><option value="4">4 غرف</option><option value="5">5 غرف</option><option value="6+">6+ غرف</option></select>
         </div>
-        <div class="form-group hidden-field" id="floors-group">
-          <label>عدد الطوابق 🏗</label>
-          <select id="floors">
-            <option value="">اختر</option>
-            <option value="1">طابق واحد</option>
-            <option value="2">طابقان</option>
-            <option value="3">3 طوابق</option>
-            <option value="4">4 طوابق</option>
-            <option value="5+">5+ طوابق</option>
-          </select>
+        <div class="form-group hidden-field" id="floors-group"><label>عدد الطوابق 🏗</label>
+          <select id="floors"><option value="">اختر</option><option value="1">طابق واحد</option><option value="2">طابقان</option><option value="3">3 طوابق</option><option value="4">4 طوابق</option><option value="5+">5+ طوابق</option></select>
         </div>
       </div>
       <div class="row">
-        <div class="form-group hidden-field" id="garden-group">
-          <label>عدد الحدائق 🌿</label>
-          <select id="garden">
-            <option value="">اختر</option>
-            <option value="1">حديقة واحدة</option>
-            <option value="2">حديقتان</option>
-            <option value="3">3 حدائق</option>
-          </select>
+        <div class="form-group hidden-field" id="garden-group"><label>عدد الحدائق 🌿</label>
+          <select id="garden"><option value="">اختر</option><option value="1">حديقة واحدة</option><option value="2">حديقتان</option><option value="3">3 حدائق</option></select>
         </div>
-        <div class="form-group hidden-field" id="pool-group">
-          <label>عدد المسابح 🏊</label>
-          <select id="pool">
-            <option value="">اختر</option>
-            <option value="1">مسبح واحد</option>
-            <option value="2">مسبحان</option>
-            <option value="3">3 مسابح</option>
-          </select>
+        <div class="form-group hidden-field" id="pool-group"><label>عدد المسابح 🏊</label>
+          <select id="pool"><option value="">اختر</option><option value="1">مسبح واحد</option><option value="2">مسبحان</option><option value="3">3 مسابح</option></select>
         </div>
       </div>
       <div class="row">
-        <div class="form-group">
-          <label>السعر المعلن (دج)</label>
-          <input type="number" id="asking_price" placeholder="مثال: 15000000">
-        </div>
-        <div class="form-group">
-          <label>رقم واتساب</label>
-          <input type="tel" id="user_phone" placeholder="0550000000">
-        </div>
+        <div class="form-group"><label>السعر المعلن (دج)</label><input type="number" id="asking_price" placeholder="مثال: 15000000"></div>
+        <div class="form-group"><label>رقم واتساب</label><input type="tel" id="user_phone" placeholder="0550000000"></div>
       </div>
       <div class="secret-field">
         <label>🔒 أدنى سعر مقبول (سري)</label>
@@ -235,35 +202,37 @@
 <div class="page" id="page-buyer">
   <div class="container">
     <div class="card" style="padding:1rem 1.5rem">
-      <h2>🔍 تصفية العقارات</h2>
+      <h2>🔍 البحث عن عقار</h2>
       <div class="row">
         <div class="form-group" style="margin-bottom:0.75rem">
           <label>نوع الصفقة</label>
           <select id="filter-deal" onchange="loadListings()">
-            <option value="">الكل</option>
-            <option value="بيع">بيع</option>
-            <option value="إيجار">إيجار</option>
+            <option value="">الكل</option><option value="بيع">بيع</option><option value="إيجار">إيجار</option>
           </select>
         </div>
         <div class="form-group" style="margin-bottom:0.75rem">
           <label>نوع العقار</label>
           <select id="filter-type" onchange="loadListings()">
-            <option value="">الكل</option>
-            <option value="شقة">شقة</option>
-            <option value="فيلا">فيلا</option>
-            <option value="منزل فردي">منزل فردي</option>
-            <option value="تجاري">تجاري</option>
-            <option value="أرض فلاحية">أرض فلاحية</option>
-            <option value="أرض صالحة للبناء">أرض صالحة للبناء</option>
-            <option value="أخرى">أخرى</option>
+            <option value="">الكل</option><option value="شقة">شقة</option><option value="فيلا">فيلا</option><option value="منزل فردي">منزل فردي</option><option value="تجاري">تجاري</option><option value="أرض فلاحية">أرض فلاحية</option><option value="أرض صالحة للبناء">أرض صالحة للبناء</option><option value="أخرى">أخرى</option>
           </select>
         </div>
       </div>
+      <div class="row">
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>الولاية</label>
+          <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        </div>
+        <div class="form-group" style="margin-bottom:0.75rem">
+          <label>البلدية</label>
+          <input type="text" id="filter-municipality" placeholder="جميع البلديات" oninput="loadListings()">
+        </div>
+      </div>
       <div class="form-group" style="margin-bottom:0">
-        <label>الولاية</label>
-        <input type="text" id="filter-wilaya" placeholder="جميع الولايات" oninput="loadListings()">
+        <label>الحي</label>
+        <input type="text" id="filter-neighborhood" placeholder="جميع الأحياء" oninput="loadListings()">
       </div>
     </div>
+    <div id="results-count" class="results-count"></div>
     <div id="listings-container"><div class="loading">جاري التحميل...</div></div>
   </div>
 </div>
@@ -301,6 +270,11 @@ const API = 'https://aqarmatch.onrender.com';
 let neighborhoods = [];
 let currentRating = 0;
 
+const TYPE_ICONS = {
+  'شقة': '🏢', 'فيلا': '🏰', 'منزل فردي': '🏠', 'تجاري': '🏪',
+  'أرض فلاحية': '🌾', 'أرض صالحة للبناء': '🏗️', 'أخرى': '📦'
+};
+
 function showPage(name, btn) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -323,10 +297,7 @@ function hide(id) { document.getElementById(id).classList.add('hidden-field'); }
 function onPropertyTypeChange() {
   const type = document.getElementById('property_type').value;
   hide('rooms-group'); hide('floors-group'); hide('garden-group'); hide('pool-group');
-  document.getElementById('rooms').value = '';
-  document.getElementById('floors').value = '';
-  document.getElementById('garden').value = '';
-  document.getElementById('pool').value = '';
+  ['rooms','floors','garden','pool'].forEach(id => document.getElementById(id).value = '');
   if (type === 'شقة') { show('rooms-group'); }
   if (type === 'فيلا') { show('floors-group'); show('garden-group'); show('pool-group'); }
   if (type === 'منزل فردي') { show('floors-group'); show('garden-group'); }
@@ -367,7 +338,6 @@ async function submitListing() {
   const garden = document.getElementById('garden').value;
   const pool = document.getElementById('pool').value;
   const alertDiv = document.getElementById('seller-alert');
-
   if (!property_type || !wilaya || !municipality || !neighborhoods.length || !asking_price || !floor_price || !user_phone) {
     alertDiv.innerHTML = '<div class="alert alert-error">يرجى ملء جميع الحقول الإلزامية</div>'; return;
   }
@@ -377,13 +347,12 @@ async function submitListing() {
   btn.disabled = true; btn.textContent = 'جاري النشر...';
   try {
     const res = await fetch(API + '/api/listings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ deal_type, property_type, wilaya, municipality, neighborhoods, asking_price, floor_price, user_phone, area, rooms, facades, floors, garden, pool })
+      method: 'POST', headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({deal_type, property_type, wilaya, municipality, neighborhoods, asking_price, floor_price, user_phone, area, rooms, facades, floors, garden, pool})
     });
     const data = await res.json();
     if (res.ok) {
-      alertDiv.innerHTML = '<div class="alert alert-success">تم نشر عقارك بنجاح!</div>';
+      alertDiv.innerHTML = '<div class="alert alert-success">✅ تم نشر عقارك بنجاح!</div>';
       neighborhoods = []; renderNeighborhoods();
       ['wilaya','municipality','asking_price','floor_price','user_phone','area'].forEach(id => document.getElementById(id).value = '');
       ['property_type','rooms','facades','floors','garden','pool'].forEach(id => document.getElementById(id).value = '');
@@ -397,32 +366,81 @@ async function submitListing() {
   btn.disabled = false; btn.textContent = 'نشر العقار';
 }
 
+function specBox(icon, label, val) {
+  if (val) {
+    return '<div class="spec-item"><span class="spec-icon">' + icon + '</span><span class="spec-label">' + label + '</span><span class="spec-val">' + val + '</span></div>';
+  }
+  return '<div class="spec-item spec-missing"><span class="spec-icon">' + icon + '</span><span class="spec-label">' + label + '</span><span class="spec-val">غير محدد</span></div>';
+}
+
+function buildSpecsGrid(l) {
+  let boxes = '';
+  boxes += specBox('📐', 'المساحة', l.area ? (l.area + ' م²') : '');
+  boxes += specBox('🧱', 'الواجهات', l.facades || '');
+  if (l.property_type === 'شقة') {
+    boxes += specBox('🛏', 'الغرف', l.rooms || '');
+  }
+  if (['فيلا','منزل فردي','تجاري'].includes(l.property_type)) {
+    boxes += specBox('🏗', 'الطوابق', l.floors || '');
+  }
+  if (['فيلا','منزل فردي'].includes(l.property_type)) {
+    boxes += specBox('🌿', 'الحدائق', l.garden || '');
+  }
+  if (l.property_type === 'فيلا') {
+    boxes += specBox('🏊', 'المسابح', l.pool || '');
+  }
+  return '<div class="specs-grid">' + boxes + '</div>';
+}
+
 async function loadListings() {
   const container = document.getElementById('listings-container');
+  const countDiv = document.getElementById('results-count');
   container.innerHTML = '<div class="loading">جاري التحميل...</div>';
+  countDiv.textContent = '';
   const deal = document.getElementById('filter-deal').value;
   const type = document.getElementById('filter-type').value;
   const wilaya = document.getElementById('filter-wilaya').value.trim();
+  const municipality = document.getElementById('filter-municipality').value.trim();
+  const neighborhood = document.getElementById('filter-neighborhood').value.trim();
   let url = API + '/api/listings?';
   if (deal) url += 'deal_type=' + encodeURIComponent(deal) + '&';
   if (wilaya) url += 'wilaya=' + encodeURIComponent(wilaya) + '&';
+  if (municipality) url += 'municipality=' + encodeURIComponent(municipality) + '&';
   try {
     const res = await fetch(url);
     let listings = await res.json();
-    if (type) listings = listings.filter(function(l) { return l.property_type === type; });
+    if (type) listings = listings.filter(l => l.property_type === type);
+    if (neighborhood) listings = listings.filter(l => (l.neighborhoods||[]).some(n => n.includes(neighborhood)));
     if (!listings.length) {
-      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات متاحة حالياً</div>'; return;
+      container.innerHTML = '<div class="card" style="text-align:center;color:#888;padding:2rem">لا توجد عقارات تطابق معايير البحث</div>'; return;
     }
-    container.innerHTML = listings.map(function(l) {
-      const details = [
-        l.area ? ('م² ' + l.area + ' 📐') : '',
-        l.rooms ? (l.rooms + ' غرف 🛏') : '',
-        l.floors ? (l.floors + ' طوابق 🏗') : '',
-        l.facades ? (l.facades + ' واجهات 🧱') : '',
-        l.garden ? (l.garden + ' حديقة 🌿') : '',
-        l.pool ? (l.pool + ' مسبح 🏊') : '',
-      ].filter(Boolean);
-      return '<div class="listing-card"><div class="listing-card-body"><h3>' + l.deal_type + (l.property_type ? ' — ' + l.property_type : '') + ' — ' + l.wilaya + '، ' + l.municipality + '</h3><div class="listing-meta">' + (l.neighborhoods||[]).map(function(n) { return '<span class="tag">📍 ' + n + '</span>'; }).join('') + details.map(function(d) { return '<span class="tag">' + d + '</span>'; }).join('') + '<span class="tag">⏰ ' + l.days_remaining + ' يوم</span></div><span class="price-badge">' + l.asking_price.toLocaleString() + ' دج</span><div class="match-form"><input type="number" placeholder="ميزانيتك (دج)" id="budget-' + l.id + '"><input type="tel" placeholder="واتساب" id="phone-' + l.id + '"><button onclick="checkMatch(' + l.id + ')">فحص التطابق</button></div><div id="match-result-' + l.id + '"></div></div></div>';
+    countDiv.textContent = 'تم العثور على ' + listings.length + ' عقار';
+    container.innerHTML = listings.map(l => {
+      const neighborhoodTags = (l.neighborhoods||[]).map(n => '<span class="tag">📍 ' + n + '</span>').join('');
+      const typeIcon = TYPE_ICONS[l.property_type] || '🏠';
+      const typeName = l.property_type || 'نوع غير محدد';
+      return '<div class="listing-card">' +
+        '<div class="listing-card-header">' +
+          '<h3><span class="deal-type-badge">' + l.deal_type + '</span>' + l.wilaya + '، ' + l.municipality + '</h3>' +
+          '<span class="price-badge">' + l.asking_price.toLocaleString() + ' دج</span>' +
+        '</div>' +
+        '<div class="listing-card-body">' +
+          '<div class="property-type-line"><span class="big-icon">' + typeIcon + '</span><span class="type-name">' + typeName + '</span></div>' +
+          buildSpecsGrid(l) +
+          '<div class="neighborhoods-row">' + neighborhoodTags +
+            '<span class="tag tag-days">⏰ ' + l.days_remaining + ' يوم متبقي</span>' +
+          '</div>' +
+          '<div class="match-section">' +
+            '<p>💡 أدخل ميزانيتك لفحص التطابق مع هذا العرض</p>' +
+            '<div class="match-form">' +
+              '<input type="number" placeholder="ميزانيتك (دج)" id="budget-' + l.id + '">' +
+              '<input type="tel" placeholder="رقم واتساب" id="phone-' + l.id + '">' +
+              '<button onclick="checkMatch(' + l.id + ')">فحص التطابق ✓</button>' +
+            '</div>' +
+          '</div>' +
+          '<div id="match-result-' + l.id + '"></div>' +
+        '</div>' +
+      '</div>';
     }).join('');
   } catch(e) {
     container.innerHTML = '<div class="card" style="text-align:center;color:#c62828">تعذر تحميل العقارات</div>';
@@ -436,7 +454,7 @@ async function checkMatch(id) {
   if (!budget || !buyer_phone) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">يرجى إدخال الميزانية ورقم الواتساب</div>'; return; }
   resultDiv.innerHTML = '<div style="color:#888;font-size:0.85rem;margin-top:0.5rem">جاري الفحص...</div>';
   try {
-    const res = await fetch(API + '/api/listings/' + id + '/match', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({budget: budget, buyer_phone: buyer_phone}) });
+    const res = await fetch(API + '/api/listings/' + id + '/match', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({budget, buyer_phone})});
     const data = await res.json();
     resultDiv.innerHTML = '<div class="alert alert-' + (data.matched ? 'success' : 'error') + '" style="margin-top:0.5rem">' + data.message + '</div>';
   } catch(e) { resultDiv.innerHTML = '<div class="alert alert-error" style="margin-top:0.5rem">تعذر الاتصال بالخادم</div>'; }
@@ -457,37 +475,37 @@ let ratings = [];
 try { ratings = JSON.parse(localStorage.getItem('aqar_ratings') || '[]'); } catch(e) {}
 
 function hoverRating(n) {
-  document.querySelectorAll('.star').forEach(function(s,i) { s.classList.toggle('active', i < n); });
+  document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('active', i < n));
   document.getElementById('star-label').textContent = starLabels[n];
 }
 function unhoverRating() {
-  document.querySelectorAll('.star').forEach(function(s,i) { s.classList.toggle('active', i < currentRating); });
+  document.querySelectorAll('.star').forEach((s,i) => s.classList.toggle('active', i < currentRating));
   document.getElementById('star-label').textContent = currentRating ? starLabels[currentRating] : 'اختر تقييمك';
 }
 function setRating(n) { currentRating = n; document.getElementById('rate-btn').disabled = false; unhoverRating(); }
 function submitRating() {
   if (!currentRating) return;
   const comment = document.getElementById('rating-comment').value.trim();
-  ratings.unshift({ stars: currentRating, comment: comment, date: new Date().toLocaleDateString('ar-DZ') });
+  ratings.unshift({stars: currentRating, comment, date: new Date().toLocaleDateString('ar-DZ')});
   if (ratings.length > 50) ratings = ratings.slice(0, 50);
   try { localStorage.setItem('aqar_ratings', JSON.stringify(ratings)); } catch(e) {}
-  document.getElementById('rate-alert').innerHTML = '<div class="alert alert-success">شكراً على تقييمك!</div>';
+  document.getElementById('rate-alert').innerHTML = '<div class="alert alert-success">✅ شكراً على تقييمك!</div>';
   document.getElementById('rating-comment').value = '';
   currentRating = 0;
   document.getElementById('rate-btn').disabled = true;
   unhoverRating(); loadRatings();
-  setTimeout(function() { document.getElementById('rate-alert').innerHTML = ''; }, 3000);
+  setTimeout(() => document.getElementById('rate-alert').innerHTML = '', 3000);
 }
 function renderRatingsList(containerId) {
   const el = document.getElementById(containerId);
   if (!el) return;
   if (!ratings.length) { el.innerHTML = '<div style="text-align:center;color:#888;padding:1rem">لا توجد تقييمات بعد</div>'; return; }
-  const avg = (ratings.reduce(function(s,r) { return s + r.stars; }, 0) / ratings.length).toFixed(1);
+  const avg = (ratings.reduce((s,r) => s + r.stars, 0) / ratings.length).toFixed(1);
   let html = '<div style="text-align:center;margin-bottom:1rem"><div style="font-size:2rem;font-weight:700;color:#0F2744">' + avg + '</div><div style="color:#f5a623;font-size:1.2rem">';
   for(let i=0;i<Math.round(avg);i++) html += '★';
   for(let i=Math.round(avg);i<5;i++) html += '☆';
   html += '</div><div style="font-size:0.8rem;color:#888">' + ratings.length + ' تقييم</div></div>';
-  ratings.slice(0,10).forEach(function(r) {
+  ratings.slice(0,10).forEach(r => {
     html += '<div class="rating-item"><div class="rating-stars">';
     for(let i=0;i<r.stars;i++) html += '★';
     for(let i=r.stars;i<5;i++) html += '☆';
