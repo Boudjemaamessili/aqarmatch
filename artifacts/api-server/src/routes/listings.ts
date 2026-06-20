@@ -10,6 +10,8 @@ import {
   RenewListingBody,
 } from "@workspace/api-zod";
 
+import { suggestFloorPrice } from "../agents/priceAdvisor.js";
+
 const router = Router();
 
 // ─── إعداد واتساب (Make.com Webhook) ────────────────────────────────────────
@@ -486,6 +488,52 @@ router.delete("/admin/listings/:id", async (req: Request, res: Response) => {
   }
 
   res.json({ success: true, deleted_id: id });
+});
+
+// ─── وكيل اقتراح السعر (Groq AI) ────────────────────────────────────────────
+router.post("/suggest-price", async (req: Request, res: Response) => {
+  try {
+    const {
+      asking_price, area, property_type,
+      wilaya, municipality, rooms, deal_type
+    } = req.body;
+
+    if (!asking_price || !wilaya || !municipality) {
+      res.status(400).json({ success: false, error: "السعر والموقع مطلوبان" });
+      return;
+    }
+
+    // جلب عقارات مشابهة من قاعدة البيانات الحقيقية
+    const conditions: ReturnType<typeof eq>[] = [
+      eq(listingsTable.wilaya, wilaya),
+      eq(listingsTable.is_active, true),
+    ];
+    if (property_type) conditions.push(eq(listingsTable.property_type, property_type));
+    if (deal_type)     conditions.push(eq(listingsTable.deal_type, deal_type));
+
+    const similarListings = await db
+      .select({
+        asking_price: listingsTable.asking_price,
+        floor_price:  listingsTable.floor_price,
+        area:         listingsTable.area,
+        property_type: listingsTable.property_type,
+        wilaya:       listingsTable.wilaya,
+        municipality: listingsTable.municipality,
+      })
+      .from(listingsTable)
+      .where(and(...conditions))
+      .limit(5);
+
+    const advice = await suggestFloorPrice(
+      { asking_price, area, property_type, wilaya, municipality, rooms, deal_type },
+      similarListings as any
+    );
+
+    res.json({ success: true, advice });
+  } catch (error) {
+    console.error("[suggest-price] error:", error);
+    res.status(500).json({ success: false, error: "تعذر الحصول على اقتراح السعر" });
+  }
 });
 
 export default router;
