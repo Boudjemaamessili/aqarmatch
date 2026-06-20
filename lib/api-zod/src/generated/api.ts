@@ -52,7 +52,14 @@ export const CreateListingBody = zod.object({
   "neighborhoods": zod.array(zod.string()),
   "asking_price": zod.number(),
   "floor_price": zod.number(),
-  "user_phone": zod.string()
+  "user_phone": zod.string(),
+  "property_type": zod.string().nullish(),
+  "area": zod.coerce.string().nullish(),
+  "rooms": zod.coerce.string().nullish(),
+  "facades": zod.coerce.string().nullish(),
+  "floors": zod.coerce.string().nullish(),
+  "garden": zod.coerce.string().nullish(),
+  "pool": zod.coerce.string().nullish()
 })
 
 

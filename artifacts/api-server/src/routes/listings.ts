@@ -10,6 +10,8 @@ import {
   RenewListingBody,
 } from "@workspace/api-zod";
 
+import { suggestFloorPrice } from "../agents/priceAdvisor.js";
+
 const router = Router();
 
 // ─── إعداد واتساب (Make.com Webhook) ────────────────────────────────────────
@@ -154,7 +156,6 @@ function formatListing(row: typeof listingsTable.$inferSelect) {
 }
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
-
 router.get("/wilayat", (_req: Request, res: Response) => {
   res.json(WILAYAT);
 });
@@ -165,6 +166,7 @@ router.get("/listings/stats", async (_req: Request, res: Response) => {
     .select()
     .from(listingsTable)
     .orderBy(desc(listingsTable.created_at));
+
   const activeListings = allListings.filter(
     (l) => l.is_active && new Date(l.expires_at) > now
   );
@@ -193,14 +195,14 @@ router.get("/listings", async (req: Request, res: Response) => {
     res.status(400).json({ error: "Invalid query params" });
     return;
   }
-
   const { deal_type, wilaya, municipality, max_price } = parsed.data;
-  const now = new Date();
 
+  const now = new Date();
   const conditions: ReturnType<typeof eq>[] = [
     gt(listingsTable.expires_at, now),
     eq(listingsTable.is_active, true),
   ];
+
   if (deal_type)              conditions.push(eq(listingsTable.deal_type, deal_type));
   if (wilaya)                 conditions.push(eq(listingsTable.wilaya, wilaya));
   if (municipality)           conditions.push(eq(listingsTable.municipality, municipality));
@@ -223,8 +225,16 @@ router.post("/listings", async (req: Request, res: Response) => {
   }
 
   const {
+<<<<<<< HEAD
     
   } = parsed.data as any;
+=======
+    deal_type, wilaya, municipality, neighborhoods,
+    asking_price, floor_price, user_phone,
+    property_type, area, rooms, facades, floors, garden, pool,
+  } = parsed.data as any;
+
+>>>>>>> 0dd3ad1ba750d3c6aa11d678b83b6ba3d8b3d90e
   if (floor_price > asking_price) {
     res.status(400).json({
     deal_type, wilaya, municipality, neighborhoods,
@@ -254,6 +264,13 @@ router.post("/listings", async (req: Request, res: Response) => {
       garden: garden ?? null,
       pool: pool ?? null,   // محفوظ في DB فقط — لا يُعاد للواجهة
       user_phone,
+      property_type: property_type ?? null,
+      area: area ?? null,
+      rooms: rooms ?? null,
+      facades: facades ?? null,
+      floors: floors ?? null,
+      garden: garden ?? null,
+      pool: pool ?? null,
       expires_at: expiresAt,
       is_active: true,
     })
@@ -414,6 +431,7 @@ router.post("/listings/:id/renew", async (req: Request, res: Response) => {
     new Date(listing.expires_at) > new Date()
       ? new Date(listing.expires_at)
       : new Date();
+
   const newExpiresAt = new Date(baseDate);
   newExpiresAt.setDate(newExpiresAt.getDate() + LISTING_EXPIRY_DAYS);
 
@@ -424,6 +442,112 @@ router.post("/listings/:id/renew", async (req: Request, res: Response) => {
     .returning();
 
   res.json(formatListing(updated));
+});
+
+// ─── لوحة تحكم المسؤول ──────────────────────────────────────────────────────
+const ADMIN_PASSWORD = "belkis26012014";
+
+router.get("/admin/listings", async (req: Request, res: Response) => {
+  const password = req.query.password as string | undefined;
+  if (password !== ADMIN_PASSWORD) {
+    res.status(401).json({ error: "كلمة المرور غير صحيحة" });
+    return;
+  }
+
+  const rows = await db
+    .select()
+    .from(listingsTable)
+    .orderBy(desc(listingsTable.created_at));
+
+  res.json(
+    rows.map((row) => ({
+      id: row.id,
+      deal_type: row.deal_type,
+      property_type: row.property_type,
+      wilaya: row.wilaya,
+      municipality: row.municipality,
+      neighborhoods: row.neighborhoods ?? [],
+      asking_price: parseFloat(row.asking_price as unknown as string),
+      user_phone: row.user_phone,
+      created_at: row.created_at.toISOString(),
+      expires_at: new Date(row.expires_at).toISOString(),
+      is_active: computeIsActive(row),
+      days_remaining: computeDaysRemaining(new Date(row.expires_at)),
+    }))
+  );
+});
+
+router.delete("/admin/listings/:id", async (req: Request, res: Response) => {
+  const password = req.query.password as string | undefined;
+  if (password !== ADMIN_PASSWORD) {
+    res.status(401).json({ error: "كلمة المرور غير صحيحة" });
+    return;
+  }
+
+  const id = parseInt(String(req.params.id));
+  if (isNaN(id)) {
+    res.status(400).json({ error: "Invalid id" });
+    return;
+  }
+
+  await db.delete(matchesTable).where(eq(matchesTable.listing_id, id));
+  const deleted = await db
+    .delete(listingsTable)
+    .where(eq(listingsTable.id, id))
+    .returning();
+
+  if (!deleted.length) {
+    res.status(404).json({ error: "Listing not found" });
+    return;
+  }
+
+  res.json({ success: true, deleted_id: id });
+});
+
+// ─── وكيل اقتراح السعر (Groq AI) ────────────────────────────────────────────
+router.post("/suggest-price", async (req: Request, res: Response) => {
+  try {
+    const {
+      asking_price, area, property_type,
+      wilaya, municipality, rooms, deal_type
+    } = req.body;
+
+    if (!asking_price || !wilaya || !municipality) {
+      res.status(400).json({ success: false, error: "السعر والموقع مطلوبان" });
+      return;
+    }
+
+    // جلب عقارات مشابهة من قاعدة البيانات الحقيقية
+    const conditions: ReturnType<typeof eq>[] = [
+      eq(listingsTable.wilaya, wilaya),
+      eq(listingsTable.is_active, true),
+    ];
+    if (property_type) conditions.push(eq(listingsTable.property_type, property_type));
+    if (deal_type)     conditions.push(eq(listingsTable.deal_type, deal_type));
+
+    const similarListings = await db
+      .select({
+        asking_price: listingsTable.asking_price,
+        floor_price:  listingsTable.floor_price,
+        area:         listingsTable.area,
+        property_type: listingsTable.property_type,
+        wilaya:       listingsTable.wilaya,
+        municipality: listingsTable.municipality,
+      })
+      .from(listingsTable)
+      .where(and(...conditions))
+      .limit(5);
+
+    const advice = await suggestFloorPrice(
+      { asking_price, area, property_type, wilaya, municipality, rooms, deal_type },
+      similarListings as any
+    );
+
+    res.json({ success: true, advice });
+  } catch (error) {
+    console.error("[suggest-price] error:", error);
+    res.status(500).json({ success: false, error: "تعذر الحصول على اقتراح السعر" });
+  }
 });
 
 export default router;
