@@ -138,6 +138,13 @@ function formatListing(row: typeof listingsTable.$inferSelect) {
     // user_phone مكشوف هنا لأن البائع يدخل رقمه عند النشر
     // لكن رقم المشتري لا يُكشف للبائع إلا بعد التأكيد
     user_phone: row.user_phone,
+    property_type: row.property_type,
+    area: row.area,
+    rooms: row.rooms,
+    facades: row.facades,
+    floors: row.floors,
+    garden: row.garden,
+    pool: row.pool,
     created_at: row.created_at.toISOString(),
     expires_at: expiresAt.toISOString(),
     is_active: isActive,
@@ -216,13 +223,13 @@ router.post("/listings", async (req: Request, res: Response) => {
   }
 
   const {
-    deal_type, wilaya, municipality, neighborhoods,
-    asking_price, floor_price, user_phone,
-  } = parsed.data;
-
+    
+  } = parsed.data as any;
   if (floor_price > asking_price) {
     res.status(400).json({
-      error: "السعر السري يجب أن يكون أقل من أو يساوي السعر المعلن",
+    deal_type, wilaya, municipality, neighborhoods,
+    asking_price, floor_price, user_phone,
+    property_type, area, rooms, facades, floors, garden, pool,
     });
     return;
   }
@@ -238,7 +245,14 @@ router.post("/listings", async (req: Request, res: Response) => {
       municipality,
       neighborhoods: neighborhoods ?? [],
       asking_price: String(asking_price),
-      floor_price:  String(floor_price),   // محفوظ في DB فقط — لا يُعاد للواجهة
+      floor_price:  String(floor_price),
+      property_type: property_type ?? null,
+      area: area ?? null,
+      rooms: rooms ?? null,
+      facades: facades ?? null,
+      floors: floors ?? null,
+      garden: garden ?? null,
+      pool: pool ?? null,   // محفوظ في DB فقط — لا يُعاد للواجهة
       user_phone,
       expires_at: expiresAt,
       is_active: true,
