@@ -124,6 +124,15 @@
     .bottom-cta-section { background: linear-gradient(135deg, #0F2744, #1a3a5c); color: white; border-radius: 16px; padding: 2.5rem 1.5rem; text-align: center; margin: 1.5rem 0 2rem; }
     .bottom-cta-section h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
     .bottom-cta-section p { color: rgba(255,255,255,0.75); margin-bottom: 1.5rem; }
+    /* AI Price Advisor */
+    .advice-box { background: #f0f9ff; border: 1.5px solid #0ea5e9; border-radius: 10px; padding: 1rem; margin-top: 0.75rem; display: none; }
+    .advice-box .advice-range { font-size: 1.1rem; font-weight: 700; color: #0F2744; margin: 0.4rem 0; }
+    .advice-box .advice-reason { font-size: 0.82rem; color: #555; margin-bottom: 0.5rem; }
+    .advice-box .advice-conf { font-size: 0.78rem; color: #888; margin-bottom: 0.75rem; }
+    .btn-suggest { width: 100%; padding: 0.65rem; background: #f0f9ff; color: #0ea5e9; border: 1.5px solid #0ea5e9; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; margin-bottom: 0.5rem; transition: all 0.2s; }
+    .btn-suggest:hover { background: #0ea5e9; color: white; }
+    .btn-suggest:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-apply { background: #0ea5e9; color: white; border: none; border-radius: 6px; padding: 0.5rem 1.2rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
     footer { text-align: center; padding: 2rem; color: #888; font-size: 0.82rem; }
   </style>
 </head>
@@ -322,6 +331,14 @@
         <div class="form-group"><label>السعر المعلن (دج)</label><input type="number" id="asking_price" placeholder="مثال: 15000000"></div>
         <div class="form-group"><label>رقم واتساب</label><input type="tel" id="user_phone" placeholder="0550000000"></div>
       </div>
+      <button class="btn-suggest" id="suggest-btn" onclick="suggestPrice()" type="button">🤖 اقترح سعر التفاوض بالذكاء الاصطناعي</button>
+      <div class="advice-box" id="advice-box">
+        <p style="font-weight:600;color:#0ea5e9;margin-bottom:0.4rem">🤖 اقتراح وكيل التقييم الذكي</p>
+        <div class="advice-range" id="advice-range"></div>
+        <div class="advice-reason" id="advice-reason"></div>
+        <div class="advice-conf" id="advice-conf"></div>
+        <button class="btn-apply" onclick="applyAdvice()" type="button">✅ تطبيق الاقتراح على السعر السري</button>
+      </div>
       <div class="secret-field">
         <label>🔒 أدنى سعر مقبول (سري)</label>
         <input type="number" id="floor_price" placeholder="مثال: 12000000">
@@ -415,7 +432,64 @@ function showPage(name, btn) {
   document.getElementById('page-' + name).classList.add('active');
   if (btn) btn.classList.add('active');
   if (name === 'buyer') loadListings();
-  if (name === 'home') { loadStats(); loadHomeRatings(); }
+  if (name === 'home') { let lastAdviceAvg = 0;
+
+async function suggestPrice() {
+  const asking_price = document.getElementById('asking_price').value.trim();
+  const area = document.getElementById('area').value.trim();
+  const property_type = document.getElementById('property_type').value;
+  const wilaya = document.getElementById('wilaya').value.trim();
+  const municipality = document.getElementById('municipality').value.trim();
+  const rooms = document.getElementById('rooms').value;
+  const deal_type = document.getElementById('deal_type').value;
+  const btn = document.getElementById('suggest-btn');
+  const box = document.getElementById('advice-box');
+
+  if (!asking_price || !wilaya || !municipality) {
+    alert('يرجى ملء السعر المعلن، الولاية، والبلدية أولاً');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري تحليل السوق...';
+  box.style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/api/listings/suggest-price', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({asking_price, area, property_type, wilaya, municipality, rooms, deal_type})
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      const {min, max, reasoning, confidence} = data.advice;
+      lastAdviceAvg = Math.round((min + max) / 2);
+      document.getElementById('advice-range').textContent =
+        'السعر المقترح: ' + min.toLocaleString('ar-DZ') + ' — ' + max.toLocaleString('ar-DZ') + ' دج';
+      document.getElementById('advice-reason').textContent = '📊 ' + reasoning;
+      document.getElementById('advice-conf').textContent =
+        'دقة التقدير: ' + (confidence === 'high' ? '🟢 عالية' : confidence === 'medium' ? '🟡 متوسطة' : '🔴 منخفضة (بيانات مقارنة محدودة)');
+      box.style.display = 'block';
+    } else {
+      alert('تعذر الحصول على الاقتراح. حاول مرة أخرى.');
+    }
+  } catch(e) {
+    alert('تعذر الاتصال بالخادم');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 اقترح سعر التفاوض بالذكاء الاصطناعي';
+  }
+}
+
+function applyAdvice() {
+  if (lastAdviceAvg > 0) {
+    document.getElementById('floor_price').value = lastAdviceAvg;
+    document.getElementById('advice-box').style.display = 'none';
+  }
+}
+
+loadStats(); loadHomeRatings(); }
   if (name === 'rate') loadRatings();
 }
 
@@ -649,6 +723,63 @@ function renderRatingsList(containerId) {
 }
 function loadRatings() { renderRatingsList('ratings-list'); }
 function loadHomeRatings() { renderRatingsList('home-ratings'); }
+let lastAdviceAvg = 0;
+
+async function suggestPrice() {
+  const asking_price = document.getElementById('asking_price').value.trim();
+  const area = document.getElementById('area').value.trim();
+  const property_type = document.getElementById('property_type').value;
+  const wilaya = document.getElementById('wilaya').value.trim();
+  const municipality = document.getElementById('municipality').value.trim();
+  const rooms = document.getElementById('rooms').value;
+  const deal_type = document.getElementById('deal_type').value;
+  const btn = document.getElementById('suggest-btn');
+  const box = document.getElementById('advice-box');
+
+  if (!asking_price || !wilaya || !municipality) {
+    alert('يرجى ملء السعر المعلن، الولاية، والبلدية أولاً');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري تحليل السوق...';
+  box.style.display = 'none';
+
+  try {
+    const res = await fetch(API + '/api/listings/suggest-price', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({asking_price, area, property_type, wilaya, municipality, rooms, deal_type})
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      const {min, max, reasoning, confidence} = data.advice;
+      lastAdviceAvg = Math.round((min + max) / 2);
+      document.getElementById('advice-range').textContent =
+        'السعر المقترح: ' + min.toLocaleString('ar-DZ') + ' — ' + max.toLocaleString('ar-DZ') + ' دج';
+      document.getElementById('advice-reason').textContent = '📊 ' + reasoning;
+      document.getElementById('advice-conf').textContent =
+        'دقة التقدير: ' + (confidence === 'high' ? '🟢 عالية' : confidence === 'medium' ? '🟡 متوسطة' : '🔴 منخفضة (بيانات مقارنة محدودة)');
+      box.style.display = 'block';
+    } else {
+      alert('تعذر الحصول على الاقتراح. حاول مرة أخرى.');
+    }
+  } catch(e) {
+    alert('تعذر الاتصال بالخادم');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🤖 اقترح سعر التفاوض بالذكاء الاصطناعي';
+  }
+}
+
+function applyAdvice() {
+  if (lastAdviceAvg > 0) {
+    document.getElementById('floor_price').value = lastAdviceAvg;
+    document.getElementById('advice-box').style.display = 'none';
+  }
+}
+
 loadStats(); loadHomeRatings();
 </script>
 </body>
