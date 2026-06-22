@@ -316,7 +316,7 @@
         <div class="neighborhoods-tags" id="neighborhoods-tags"></div>
       </div>
       <div class="row">
-        <div class="form-group"><label>المساحة (م²)</label><input type="number" id="area" placeholder="مثال: 120"></div>
+        <div class="form-group"><label id="area-label">المساحة (م²)</label><input type="number" id="area" placeholder="مثال: 120"></div>
         <div class="form-group"><label>عدد الواجهات</label>
           <select id="facades"><option value="">اختر</option><option value="1">واجهة 1</option><option value="2">واجهتان 2</option><option value="3">3 واجهات</option><option value="4">4 واجهات</option></select>
         </div>
@@ -540,6 +540,15 @@ function onPropertyTypeChange() {
   const type = document.getElementById('property_type').value;
   hide('rooms-group'); hide('floors-group'); hide('garden-group'); hide('pool-group');
   ['rooms','floors','garden','pool'].forEach(id => document.getElementById(id).value = '');
+  const areaLabel = document.getElementById('area-label');
+  const areaInput = document.getElementById('area');
+  if (type === 'أرض فلاحية') {
+    areaLabel.textContent = 'المساحة (هكتار)';
+    areaInput.placeholder = 'مثال: 5';
+  } else {
+    areaLabel.textContent = 'المساحة (م²)';
+    areaInput.placeholder = 'مثال: 120';
+  }
   if (type === 'شقة') { show('rooms-group'); }
   if (type === 'فيلا') { show('floors-group'); show('garden-group'); show('pool-group'); }
   if (type === 'منزل فردي') { show('floors-group'); show('garden-group'); }
@@ -617,7 +626,8 @@ function specBox(icon, label, val) {
 
 function buildSpecsGrid(l) {
   let boxes = '';
-  boxes += specBox('📐', 'المساحة', l.area ? (l.area + ' م²') : '');
+  const areaUnit = l.property_type === 'أرض فلاحية' ? ' هكتار' : ' م²';
+  boxes += specBox('📐', 'المساحة', l.area ? (l.area + areaUnit) : '');
   boxes += specBox('🧱', 'الواجهات', l.facades || '');
   if (l.property_type === 'شقة') {
     boxes += specBox('🛏', 'الغرف', l.rooms || '');
