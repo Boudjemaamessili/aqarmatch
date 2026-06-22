@@ -83,6 +83,15 @@
     .rating-stars { color: #f5a623; font-size: 1rem; margin-bottom: 0.25rem; }
     .rating-date { font-size: 0.75rem; color: #aaa; margin-top: 0.2rem; }
     .hidden-field { display: none !important; }
+    .hidden { display: none !important; }
+    .admin-row { display:flex; justify-content:space-between; align-items:center; padding:1rem; border-bottom:1px solid #eee; gap:1rem; }
+    .admin-row:last-child { border-bottom:none; }
+    .admin-row-info h3 { font-size:0.9rem; color:#0F2744; margin-bottom:0.25rem; }
+    .admin-row-info .meta { font-size:0.78rem; color:#777; display:flex; flex-wrap:wrap; gap:0.4rem; }
+    .admin-row-info .meta span { background:#eef2f8; padding:0.15rem 0.5rem; border-radius:12px; }
+    .admin-row-info .price { color:#E8A87C; font-weight:700; }
+    .btn-delete { background:#c62828; color:white; border:none; border-radius:6px; padding:0.4rem 0.85rem; cursor:pointer; font-size:0.82rem; font-weight:600; white-space:nowrap; }
+    .btn-delete:hover { background:#a01e1e; }
     .results-count { font-size: 0.85rem; color: #666; margin-bottom: 1rem; padding: 0 0.25rem; }
     /* HERO */
     .hero-section { background: linear-gradient(135deg, #0F2744 0%, #1a3a5c 60%, #0F2744 100%); color: white; padding: 4rem 1.5rem 3rem; text-align: center; }
@@ -144,6 +153,7 @@
     <button onclick="showPage('seller',this)">أنشر عقاراً</button>
     <button onclick="showPage('buyer',this)">ابحث عن عقار</button>
     <button onclick="showPage('rate',this)">⭐ تقييم</button>
+    <button onclick="showPage('admin',this)" style="background:rgba(232,168,124,0.15);border-color:rgba(232,168,124,0.5)">⚙️ إدارة</button>
   </nav>
 </header>
 
@@ -410,6 +420,30 @@
     <div class="card">
       <h2>📊 تقييمات المستخدمين</h2>
       <div id="ratings-list"><div class="loading">جاري التحميل...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="page-admin">
+  <div class="container">
+    <div class="card" id="admin-login-card">
+      <h2>🔒 لوحة التحكم</h2>
+      <p style="color:#666;font-size:0.9rem;margin-bottom:1rem">هذه الصفحة مخصصة لمسؤول المنصة فقط.</p>
+      <div id="admin-login-error"></div>
+      <div class="form-group">
+        <label>كلمة المرور</label>
+        <input type="password" id="admin-password-input" placeholder="أدخل كلمة المرور" onkeypress="if(event.key==='Enter') adminLogin()">
+      </div>
+      <button class="btn" onclick="adminLogin()">دخول</button>
+    </div>
+    <div class="hidden" id="admin-dashboard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+        <h2 style="color:#0F2744;font-size:1.1rem">📋 جميع الإعلانات</h2>
+        <button onclick="adminLogout()" style="background:none;border:1.5px solid #ddd;padding:0.4rem 0.8rem;border-radius:6px;cursor:pointer;font-size:0.85rem;color:#666">خروج</button>
+      </div>
+      <div id="admin-stats" style="background:#f0f4ff;border-radius:8px;padding:0.75rem 1rem;margin-bottom:1rem;font-size:0.85rem;color:#444"></div>
+      <div id="admin-listings-list"></div>
     </div>
   </div>
 </div>
@@ -781,6 +815,77 @@ function applyAdvice() {
 }
 
 loadStats(); loadHomeRatings();
+
+// ─── لوحة التحكم ──────────────────────────────────────────────────────────
+const ADMIN_PASS = 'belkis26012014';
+let adminToken = '';
+
+function adminLogin() {
+  const pw = document.getElementById('admin-password-input').value;
+  const errDiv = document.getElementById('admin-login-error');
+  if (pw !== ADMIN_PASS) {
+    errDiv.innerHTML = '<div class="alert alert-error" style="margin-bottom:0.75rem">كلمة المرور غير صحيحة</div>';
+    return;
+  }
+  adminToken = pw;
+  errDiv.innerHTML = '';
+  document.getElementById('admin-login-card').classList.add('hidden');
+  document.getElementById('admin-dashboard').classList.remove('hidden');
+  loadAdminListings();
+}
+
+function adminLogout() {
+  adminToken = '';
+  document.getElementById('admin-password-input').value = '';
+  document.getElementById('admin-login-card').classList.remove('hidden');
+  document.getElementById('admin-dashboard').classList.add('hidden');
+}
+
+async function loadAdminListings() {
+  const listDiv = document.getElementById('admin-listings-list');
+  const statsDiv = document.getElementById('admin-stats');
+  listDiv.innerHTML = '<div class="loading">جاري التحميل...</div>';
+  try {
+    const res = await fetch(API + '/api/admin/listings?password=' + encodeURIComponent(adminToken));
+    if (res.status === 401) { adminLogout(); return; }
+    const listings = await res.json();
+    const active = listings.filter(l => l.is_active).length;
+    statsDiv.textContent = 'إجمالي الإعلانات: ' + listings.length + ' | نشط: ' + active + ' | منتهي: ' + (listings.length - active);
+    if (!listings.length) {
+      listDiv.innerHTML = '<div style="text-align:center;color:#888;padding:2rem">لا توجد إعلانات</div>'; return;
+    }
+    listDiv.innerHTML = '<div class="card" style="padding:0">' + listings.map(l => {
+      const type = l.property_type || 'غير محدد';
+      const status = l.is_active ? '<span style="color:#2e7d32">🟢 نشط</span>' : '<span style="color:#c62828">🔴 منتهي</span>';
+      return '<div class="admin-row" id="admin-row-' + l.id + '">' +
+        '<div class="admin-row-info">' +
+          '<h3>#' + l.id + ' — ' + l.deal_type + ' — ' + type + ' — ' + l.wilaya + '، ' + l.municipality + '</h3>' +
+          '<div class="meta">' +
+            '<span class="price">' + l.asking_price.toLocaleString() + ' دج</span>' +
+            '<span>📞 ' + l.user_phone + '</span>' +
+            status +
+            '<span>⏰ ' + l.days_remaining + ' يوم متبقي</span>' +
+          '</div>' +
+        '</div>' +
+        '<button class="btn-delete" onclick="adminDelete(' + l.id + ')">حذف 🗑️</button>' +
+      '</div>';
+    }).join('') + '</div>';
+  } catch(e) {
+    listDiv.innerHTML = '<div class="card" style="text-align:center;color:#c62828">تعذر الاتصال بالخادم</div>';
+  }
+}
+
+async function adminDelete(id) {
+  if (!confirm('هل أنت متأكد من حذف هذا الإعلان نهائياً؟')) return;
+  try {
+    const res = await fetch(API + '/api/admin/listings/' + id + '?password=' + encodeURIComponent(adminToken), { method: 'DELETE' });
+    if (res.ok) {
+      document.getElementById('admin-row-' + id).remove();
+    } else {
+      alert('فشل الحذف');
+    }
+  } catch(e) { alert('تعذر الاتصال بالخادم'); }
+}
 </script>
 </body>
 </html>
